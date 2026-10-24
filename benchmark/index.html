@@ -1,0 +1,633 @@
+<title>Benchmark Diamond Protect</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,500;0,600;1,500&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Mise en page : dossier de veille. Une colonne de lecture alignée à gauche, des fiches en grille, une barre de navigation collante. */
+:root{
+  --paper:#F4F5F7; --surface:#FFFFFF; --ink:#131B2C; --muted:#586277; --line:#DADFE7;
+  --accent:#9A7633; --accent-soft:#F1E9D8; --navy:#1A2744; --on-navy:#F4F1EA;
+  --good:#2E7D5B; --warn:#B4651C;
+  --f-display:"Spectral", Georgia, "Times New Roman", serif;
+  --f-body:"Public Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r:6px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#0D1220; --surface:#151C2D; --ink:#E8EBF1; --muted:#9BA4B6; --line:#283148;
+  --accent:#D2B271; --accent-soft:#2B261A; --navy:#1E2B4A; --on-navy:#F4F1EA;
+  --good:#5DBB8F; --warn:#E39A55; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0D1220; --surface:#151C2D; --ink:#E8EBF1; --muted:#9BA4B6; --line:#283148;
+  --accent:#D2B271; --accent-soft:#2B261A; --navy:#1E2B4A; --on-navy:#F4F1EA;
+  --good:#5DBB8F; --warn:#E39A55; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+a{color:inherit;text-decoration-color:var(--accent);text-underline-offset:3px}
+a:hover{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+h1,h2,h3{font-family:var(--f-display);font-weight:600;line-height:1.15;text-wrap:balance;margin:0}
+h2{font-size:clamp(1.7rem,3.2vw,2.3rem)}
+h3{font-size:1.25rem}
+p{margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.label{font-family:var(--f-mono);font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.prose{max-width:66ch;color:var(--muted)}
+.num{font-variant-numeric:tabular-nums}
+
+/* navigation */
+.topnav{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--surface);border-bottom:1px solid var(--line)}
+.topnav .wrap{display:flex;align-items:center;gap:20px;min-height:54px}
+.brand{font-family:var(--f-display);font-weight:600;font-size:1.05rem;white-space:nowrap;text-decoration:none}
+.brand span{color:var(--accent)}
+.topnav nav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;margin-left:auto}
+.topnav nav::-webkit-scrollbar{display:none}
+.topnav nav a{font-size:.88rem;font-weight:500;color:var(--muted);text-decoration:none;padding:6px 10px;border-radius:var(--r);white-space:nowrap}
+.topnav nav a:hover{color:var(--ink);background:var(--paper)}
+
+/* en-tête */
+header.intro{padding-block:56px 40px;border-bottom:1px solid var(--line)}
+header.intro h1{font-size:clamp(2.2rem,5.4vw,3.9rem);max-width:17ch;margin-block:14px 18px}
+header.intro h1 em{font-style:italic;font-weight:500;color:var(--accent)}
+.lede{font-size:1.12rem;max-width:62ch;color:var(--muted)}
+.facts{display:flex;flex-wrap:wrap;gap:10px 28px;margin-top:28px;padding-top:20px;border-top:1px solid var(--line)}
+.facts div{display:flex;align-items:baseline;gap:8px}
+.facts b{font-family:var(--f-display);font-size:1.6rem;font-weight:600}
+.facts span{color:var(--muted);font-size:.92rem}
+
+section.block{padding-block:64px;border-bottom:1px solid var(--line)}
+.head{display:grid;gap:12px;margin-bottom:32px}
+
+/* l'essentiel */
+.findings{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.finding{background:var(--surface);padding:24px;display:grid;gap:10px;align-content:start;min-width:0}
+.finding .ratio{font-family:var(--f-mono);font-size:1.5rem;font-weight:500;color:var(--accent)}
+.finding h3{font-size:1.15rem}
+.finding p{color:var(--muted);font-size:.95rem}
+
+/* références prioritaires */
+.picks{display:grid;gap:14px}
+.pick{display:grid;grid-template-columns:200px 1fr;gap:20px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px}
+.pick img{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top;border-radius:4px;border:1px solid var(--line);cursor:zoom-in}
+.pick .body{display:grid;gap:6px;min-width:0}
+.pick .title{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 12px}
+.pick .title h3{font-size:1.2rem}
+.pick .take{font-size:.95rem}
+.pick .take b{color:var(--accent);font-weight:600}
+@media (max-width:640px){.pick{grid-template-columns:1fr}}
+
+/* filtres */
+.toolbar{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;margin-bottom:22px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:500 .85rem var(--f-body);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--navy);color:var(--on-navy);border-color:var(--navy)}
+.toolbar label{font-size:.85rem;color:var(--muted);display:flex;align-items:center;gap:8px}
+select{font:500 .88rem var(--f-body);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:6px 8px}
+.count{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);margin-left:auto}
+
+/* fiches */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:18px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.card.self{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.shot{display:block;padding:0;border:0;background:var(--line);cursor:zoom-in;width:100%}
+.shot img{display:block;width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top}
+.card .content{padding:16px 18px 18px;display:grid;gap:10px;flex:1;align-content:start}
+.meta{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center}
+.tag{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.05em;text-transform:uppercase;border:1px solid var(--line);border-radius:3px;padding:2px 6px;color:var(--muted)}
+.tag.gold{border-color:var(--accent);color:var(--accent)}
+.card h3{font-size:1.2rem;display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.score{font-family:var(--f-mono);font-size:.95rem;color:var(--accent);white-space:nowrap}
+.h1q{font-family:var(--f-display);font-style:italic;font-size:.98rem;color:var(--muted);border-left:2px solid var(--line);padding-left:10px}
+.bars{display:grid;grid-template-columns:auto 1fr auto;gap:4px 10px;align-items:center;font-size:.78rem;color:var(--muted)}
+.bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:3px}
+.note{font-size:.9rem}
+.note b{font-weight:600}
+.note.minus b{color:var(--warn)}
+.note.plus b{color:var(--good)}
+.swatches{display:flex;gap:4px;align-items:center}
+.swatches i{width:18px;height:18px;border-radius:3px;border:1px solid var(--line);display:block}
+.swatches span{font-size:.78rem;color:var(--muted);margin-left:6px}
+.card .foot{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-top:6px;border-top:1px solid var(--line);font-size:.85rem}
+.linkbtn{font:600 .85rem var(--f-body);background:none;border:0;color:var(--accent);cursor:pointer;padding:0}
+
+/* dialogue */
+dialog{border:1px solid var(--line);border-radius:8px;padding:0;max-width:min(980px,calc(100vw - 32px));width:100%;background:var(--surface);color:var(--ink)}
+dialog::backdrop{background:rgba(8,12,22,.7)}
+.dlg-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--surface)}
+.dlg-body{padding:18px;display:grid;gap:16px}
+.dlg-body img{width:100%;border-radius:4px;border:1px solid var(--line)}
+.kv{display:grid;grid-template-columns:150px 1fr;gap:6px 16px;font-size:.92rem}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0;min-width:0;overflow-wrap:anywhere}
+@media (max-width:560px){.kv{grid-template-columns:1fr}.kv dt{margin-top:6px}}
+.close{font:600 .9rem var(--f-body);background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:var(--r);padding:6px 12px;cursor:pointer}
+
+/* tendances */
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:40px}
+.chart{display:grid;gap:10px}
+.row{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,2fr) 3.2em;gap:12px;align-items:center;font-size:.9rem}
+.row .track{height:14px;background:var(--line);border-radius:2px;position:relative}
+.row .track i{position:absolute;inset:0 auto 0 0;background:var(--navy);border-radius:2px}
+.row.hl .track i{background:var(--accent)}
+.row b{font-family:var(--f-mono);font-weight:500;text-align:right}
+.axis{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,2fr) 3.2em;gap:12px;font-family:var(--f-mono);font-size:.7rem;color:var(--muted)}
+.axis div:nth-child(2){display:flex;justify-content:space-between}
+.palette{display:grid;grid-template-columns:repeat(14,1fr);gap:3px;margin-top:14px}
+.palette i{aspect-ratio:1;border-radius:3px;display:block;border:1px solid var(--line)}
+.legend{font-size:.85rem;color:var(--muted);margin-top:10px}
+.anatomy{width:100%;border-collapse:collapse;font-size:.92rem}
+.anatomy th,.anatomy td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+.anatomy th{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.anatomy td:first-child{font-weight:600;white-space:nowrap}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+
+/* Diamond */
+.compare{display:grid;gap:8px;max-width:640px}
+.cmp{display:grid;grid-template-columns:110px 1fr 2.4em;gap:12px;align-items:center;font-size:.9rem}
+.cmp .t{position:relative;height:22px;background:var(--line);border-radius:2px}
+.cmp .t .avg{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink)}
+.cmp .t .dp{position:absolute;inset:4px auto 4px 0;background:var(--accent);border-radius:2px}
+.cmp b{font-family:var(--f-mono);font-weight:500}
+.key{display:flex;gap:18px;font-size:.82rem;color:var(--muted);margin-top:8px;flex-wrap:wrap}
+.key i{display:inline-block;width:14px;height:8px;background:var(--accent);margin-right:6px;vertical-align:middle;border-radius:2px}
+.key i.l{width:2px;height:14px;background:var(--ink)}
+.lists{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:24px;margin-top:36px}
+.lists > div{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px;min-width:0}
+.lists h3{margin-bottom:12px}
+ul.clean{margin:0;padding:0;list-style:none;display:grid;gap:10px}
+ul.clean li{padding-left:18px;position:relative;font-size:.95rem}
+ul.clean li::before{content:"";position:absolute;left:0;top:.62em;width:7px;height:7px;transform:rotate(45deg);background:var(--accent)}
+ul.clean.warn li::before{background:var(--warn)}
+ul.clean li b{font-weight:600}
+
+/* recommandations */
+.reco{display:grid;gap:44px}
+.reco>*,.two>*,.head>*{min-width:0}
+.da{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:16px}
+.da > div{border-top:2px solid var(--accent);padding-top:14px;display:grid;gap:8px;align-content:start}
+.da p{color:var(--muted);font-size:.95rem}
+.tree{font-family:var(--f-mono);font-size:.86rem;line-height:1.75;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px 22px;overflow-x:auto;white-space:pre;margin:0;color:var(--ink)}
+.tree .n{color:var(--accent)}
+.tree .c{color:var(--muted)}
+ol.steps{margin:0;padding:0;list-style:none;counter-reset:s;display:grid;gap:0;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);overflow:hidden}
+ol.steps li{counter-increment:s;display:grid;grid-template-columns:3em 1fr;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line);font-size:.95rem}
+ol.steps li:last-child{border-bottom:0}
+ol.steps li::before{content:counter(s,decimal-leading-zero);font-family:var(--f-mono);color:var(--accent);font-size:.85rem;padding-top:2px}
+ol.steps li b{font-weight:600}
+ol.steps li span{color:var(--muted)}
+.callout{background:var(--navy);color:var(--on-navy);border-radius:var(--r);padding:28px;display:grid;gap:14px}
+.callout h3{color:var(--on-navy);font-size:1.45rem}
+.callout p{opacity:.85;max-width:70ch}
+.callout ul{margin:0;padding-left:18px;display:grid;gap:6px;columns:2 280px;column-gap:32px}
+.callout li{break-inside:avoid}
+.callout .label{color:var(--on-navy);opacity:.7}
+footer{padding-block:48px 64px;color:var(--muted);font-size:.9rem}
+footer .wrap{display:grid;gap:14px}
+@media (prefers-reduced-motion:no-preference){.card{transition:transform .15s ease}.card:hover{transform:translateY(-2px)}}
+</style>
+
+<div class="topnav">
+  <div class="wrap">
+    <a class="brand" href="#top">Diamond <span>◆</span> Veille</a>
+    <nav aria-label="Sections">
+      <a href="#essentiel">L'essentiel</a>
+      <a href="#references">Références clés</a>
+      <a href="#fiches">Les 28 fiches</a>
+      <a href="#tendances">Tendances</a>
+      <a href="#diamond">Site actuel</a>
+      <a href="#maquette">Pour la maquette</a>
+      <a href="#methode">Méthode</a>
+    </nav>
+  </div>
+</div>
+
+<header class="intro" id="top">
+  <div class="wrap">
+    <p class="label">Veille concurrentielle · relevé du 24 octobre 2026</p>
+    <h1>Ce que font les meilleurs sites de <em>sécurité privée</em></h1>
+    <p class="lede">Benchmark de 28 sites d'entreprises de sûreté en France et dans le monde, préparé pour la refonte du site de Diamond Protect : une société agréée CNAPS qui répond à des appels d'offres et veut un site haut de gamme et rassurant.</p>
+    <div class="facts">
+      <div><b class="num">28</b><span>sites analysés</span></div>
+      <div><b class="num">12</b><span>pays</span></div>
+      <div><b class="num">8</b><span>acteurs français</span></div>
+      <div><b class="num">6</b><span>critères notés sur 5</span></div>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="block" id="essentiel">
+  <div class="wrap">
+    <div class="head">
+      <p class="label">Synthèse</p>
+      <h2>L'essentiel en six constats</h2>
+      <p class="prose">Les ratios sont relevés sur les 28 pages d'accueil du panel. Ils disent où le marché se ressemble et où Diamond Protect peut se distinguer.</p>
+    </div>
+    <div class="findings">
+      <div class="finding"><span class="ratio">0 / 28</span><h3>Personne n'occupe le terrain du haut de gamme</h3><p>Aucun site n'utilise une typographie à empattements en titre. Bleu marine, rouge et sans-serif dominent. L'identité actuelle de Diamond Protect (sérif, or, fond sombre) est déjà un territoire libre : la refonte doit l'affirmer, pas la diluer.</p></div>
+      <div class="finding"><span class="ratio">8 / 28</span><h3>Les études de cas sont rares</h3><p>Seuls Corps, Showsec, Pinkerton, Control Risks, GardaWorld, Mitie, Sicuritalia et Amarok publient des cas clients. C'est pourtant la pièce qu'un acheteur relit pour noter un mémoire technique.</p></div>
+      <div class="finding"><span class="ratio">0 / 28</span><h3>Aucun espace dédié aux acheteurs</h3><p>Aucun site ne regroupe les pièces d'un dossier de candidature (autorisation CNAPS, certificats, attestations, assurances). Seul Sicuritalia a une entrée « Administration publique » dans son menu. C'est le différenciateur le plus net pour une société qui vit des appels d'offres.</p></div>
+      <div class="finding"><span class="ratio">23 / 28</span><h3>Le recrutement a sa propre porte</h3><p>Le secteur recrute en continu. Presque tous séparent le candidat du client dès le menu (« Nous rejoindre », « Careers »). Sans cette porte, les candidatures arrivent dans le formulaire de devis.</p></div>
+      <div class="finding"><span class="ratio">11 / 28</span><h3>Le téléphone direct reste une preuve</h3><p>Les sites qui convertissent le mieux affichent un numéro cliquable en haut de page (Wilson Security, Amarok, Corps, Groupe SGP). Pour une offre 24/7, un numéro fixe visible vaut plus qu'un slogan.</p></div>
+      <div class="finding"><span class="ratio">3 / 28</span><h3>La RSE devient un argument de vente</h3><p>Seris, Goron et Torann mettent leur médaille EcoVadis en avant dès l'accueil. Les grands donneurs d'ordre notent la RSE dans leurs consultations : une notation tierce pèse plus qu'une page d'engagements.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="references">
+  <div class="wrap">
+    <div class="head">
+      <p class="label">Sélection</p>
+      <h2>Les huit sites à étudier en priorité</h2>
+      <p class="prose">Retenus pour leur proximité avec le positionnement visé : haut de gamme, rassurant, lisible par un acheteur. Pour chacun, ce que la maquette peut reprendre.</p>
+    </div>
+    <div class="picks" id="picks"></div>
+  </div>
+</section>
+
+<section class="block" id="fiches">
+  <div class="wrap">
+    <div class="head">
+      <p class="label">Panel complet</p>
+      <h2>Les 28 fiches, plus le site actuel</h2>
+      <p class="prose">Notes d'analyste sur 5, attribuées à la lecture de la page d'accueil. Cliquez sur une capture pour l'agrandir et voir les données relevées (H1, menu, appels à l'action, chiffres affichés).</p>
+    </div>
+    <div class="toolbar">
+      <div class="chips" id="f-region" role="group" aria-label="Filtrer par zone"></div>
+      <div class="chips" id="f-profil" role="group" aria-label="Filtrer par profil"></div>
+      <label for="sort">Trier par
+        <select id="sort">
+          <option value="total">Note globale</option>
+          <option value="premium">Image haut de gamme</option>
+          <option value="clarte">Clarté de l'offre</option>
+          <option value="preuves">Preuves et réassurance</option>
+          <option value="acheteur">Lecture acheteur</option>
+          <option value="conversion">Conversion</option>
+          <option value="contenu">Contenus</option>
+          <option value="nom">Nom</option>
+        </select>
+      </label>
+      <span class="count" id="count"></span>
+    </div>
+    <div class="grid" id="grid"></div>
+  </div>
+</section>
+
+<section class="block" id="tendances">
+  <div class="wrap">
+    <div class="head">
+      <p class="label">Lecture transversale</p>
+      <h2>Tendances du marché</h2>
+    </div>
+    <div class="two">
+      <div>
+        <h3>Ce qu'on trouve sur la page d'accueil</h3>
+        <p class="prose" style="margin-block:8px 20px">Nombre de sites sur 28 qui présentent chaque élément. En or, les manques qui sont des occasions pour Diamond Protect.</p>
+        <div class="chart" id="chart"></div>
+      </div>
+      <div>
+        <h3>Une palette très convenue</h3>
+        <p class="prose" style="margin-top:8px">Couleur dominante de chacun des 28 sites, classée par teinte. Le bleu marine et le rouge reviennent partout ; l'or n'apparaît que chez Control Risks.</p>
+        <div class="palette" id="palette" aria-label="Couleurs dominantes des 28 sites"></div>
+        <p class="legend">Typographies relevées : Roboto, Open Sans, Montserrat, Lato, Helvetica, Inter, Geist… toutes sans empattements.</p>
+      </div>
+    </div>
+
+    <h3 style="margin-block:52px 14px">Anatomie type d'une page d'accueil réussie</h3>
+    <p class="prose" style="margin-bottom:18px">L'ordre que suivent les meilleurs du panel, avec un exemple pour chaque bloc.</p>
+    <div class="scroll">
+      <table class="anatomy">
+        <thead><tr><th>Bloc</th><th>Rôle</th><th>Le meilleur exemple</th><th>Ce qu'il fait bien</th></tr></thead>
+        <tbody>
+          <tr><td>Promesse</td><td>Dire en une phrase qui l'on protège et comment</td><td>Wilson Security</td><td>« Our business is protecting yours » + bouton devis rouge, sans détour</td></tr>
+          <tr><td>Preuves chiffrées</td><td>Taille, ancienneté, solidité</td><td>Torann France, Groupe SGP</td><td>Affichent le chiffre d'affaires (104 M€ chacun), les effectifs, les sites, la satisfaction client (94,4 % chez SGP)</td></tr>
+          <tr><td>Offre</td><td>Montrer l'étendue sans noyer</td><td>Securitas France, Wilson James</td><td>Onglets par service ; matrice en quatre verbes (Secure, Move, Support, Optimise)</td></tr>
+          <tr><td>Secteurs</td><td>Laisser l'acheteur se reconnaître</td><td>Fiducial, Wilson Security</td><td>Entrées par secteur (défense, justice, IGH, grands événements) et par risque</td></tr>
+          <tr><td>Méthode</td><td>Rassurer sur l'exécution</td><td>Torann France</td><td>Encadrement, poste de commandement opérationnel, outils de terrain</td></tr>
+          <tr><td>Références</td><td>Prouver par les clients</td><td>Corps Security, Pinkerton</td><td>Témoignage nominatif d'un grand compte ; cas clients classés par type de mission</td></tr>
+          <tr><td>Conformité et labels</td><td>Lever les doutes réglementaires</td><td>Corps Security, Constellis</td><td>Mur d'accréditations ; rubrique « Éthique, politiques et certifications » dans le menu</td></tr>
+          <tr><td>Implantations</td><td>Montrer le maillage</td><td>Groupe SGP</td><td>Carte des agences dès le premier écran</td></tr>
+          <tr><td>Expertise</td><td>Faire autorité</td><td>Control Risks, Securitas</td><td>Rapports annuels propriétaires (RiskMap, Technology Outlook) qui servent d'aimant à contacts</td></tr>
+          <tr><td>Contact</td><td>Convertir sans friction</td><td>Groupe SGP, Amarok</td><td>« Être rappelé », téléphone 24/7 en barre haute, interlocuteur local</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="diamond">
+  <div class="wrap">
+    <div class="head">
+      <p class="label">Point de départ</p>
+      <h2>Le site actuel de Diamond Protect face au panel</h2>
+      <p class="prose">diamond-protect.fr a déjà une base solide : fond sombre, or, titres à empattements, chiffres clés, logos de références de poids (SNCF, RTE, Eiffage, Lidl, Croix-Rouge…). Ce qui manque relève surtout de la lecture acheteur et de la profondeur des contenus.</p>
+    </div>
+    <div class="compare" id="compare"></div>
+    <div class="key"><span><i></i>Diamond Protect</span><span><i class="l"></i>Moyenne du panel</span></div>
+
+    <div class="lists">
+      <div>
+        <h3>Ce qui fonctionne déjà</h3>
+        <ul class="clean">
+          <li><b>Une identité distinctive</b> dans un marché uniforme : sérif, or, photos de terrain.</li>
+          <li><b>La conformité est traitée</b> : autorisation CNAPS affichée avec son numéro, page dédiée, mention légale de l'article L.612-14 en pied de page.</li>
+          <li><b>Des preuves chiffrées</b> dès le haut de page : 20 ans, 220+ collaborateurs, 100+ clients, 1000+ sites et événements.</li>
+          <li><b>Des dirigeants nommés</b> (Amir Smail, Rafik Zouaoui, Thomas Bailly) : rare chez les ETI du panel.</li>
+          <li><b>Un formulaire qualifié</b> (entreprise, type de prestation, dates, lieu, effectifs).</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Les écarts à combler</h3>
+        <ul class="clean warn">
+          <li><b>Aucune étude de cas ni témoignage</b> : les logos ne disent pas ce qui a été fait.</li>
+          <li><b>Une seule page services</b> : pas de page par métier, par secteur ni par ville. Les liens du pied de page pointent tous vers /services.</li>
+          <li><b>Des incohérences</b> : la liste des six services diffère entre l'accueil (intervention mobile) et /services (accueil et filtrage) ; « 5 bureaux » annoncés pour 4 adresses ; ISO 9001, 14001 et 45001 citées à l'accueil mais absentes de la page conformité.</li>
+          <li><b>Certifications « sur demande »</b> : sans organisme, numéro ni date, un acheteur ne peut pas les vérifier.</li>
+          <li><b>Pas de porte recrutement</b> pour une entreprise de 220 personnes.</li>
+          <li><b>Un numéro de mobile</b> (06) comme contact principal, moins institutionnel qu'une ligne fixe 24/7.</li>
+          <li><b>Une page d'accueil très longue</b> (17 sections) qui porte tout le contenu du site.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="maquette">
+  <div class="wrap reco">
+    <div class="head" style="margin-bottom:0">
+      <p class="label">Recommandations</p>
+      <h2>Ce que le benchmark change pour la maquette</h2>
+    </div>
+
+    <div>
+      <h3 style="margin-bottom:16px">Direction artistique</h3>
+      <div class="da">
+        <div><p class="label">Couleurs</p><h3>Garder le marine profond et l'or</h3><p>C'est l'identité la plus rare du panel. Réserver l'or aux accents (chiffres, filets, boutons) et alterner sections sombres et sections claires pour la lisibilité des pages longues, comme Wilson James.</p></div>
+        <div><p class="label">Typographie</p><h3>Un sérif éditorial pour les titres</h3><p>Le sérif signe le haut de gamme face à des concurrents tous en sans-serif. L'associer à une linéale sobre pour le texte et les données, avec des titres de grande taille comme Wilson James ou Constellis.</p></div>
+        <div><p class="label">Images</p><h3>Des photos réelles, pas de banque d'images</h3><p>Les sites les plus crédibles (GardaWorld, Showsec, Torann) montrent leurs propres agents, en tenue identifiable. Prévoir un shooting : PC sécurité, filtrage d'événement, binôme cynophile, rondes de nuit.</p></div>
+        <div><p class="label">Mouvement</p><h3>Sobre et rare</h3><p>Une vidéo de terrain courte et muette en ouverture (14 sites sur 28 en ont une), puis des transitions discrètes. Le haut de gamme se lit dans la retenue.</p></div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <p class="label">Le différenciateur</p>
+      <h3>Un « Espace acheteurs » pour les appels d'offres</h3>
+      <p>Aucun des 28 sites ne le propose. Une page pensée pour le responsable achats ou le chargé de marché, qui trouve en deux clics tout ce qu'il doit vérifier avant de retenir une candidature.</p>
+      <ul>
+        <li>Autorisation CNAPS avec lien de vérification</li>
+        <li>Certificats ISO 9001, 14001, 45001 : organisme, numéro, date de validité</li>
+        <li>Attestations URSSAF et fiscales, assurance RC professionnelle (dossier sur demande ou espace protégé)</li>
+        <li>Chiffres clés et solidité financière, sur le modèle de Torann et SGP</li>
+        <li>Références classées par secteur, avec études de cas</li>
+        <li>Processus de reprise d'un marché : passation, formation, délais de démarrage</li>
+        <li>Engagements de service : délais d'intervention, reporting, main courante électronique</li>
+        <li>Politique RSE, notation tierce si disponible, flotte électrique</li>
+        <li>Interlocuteur dédié aux appels d'offres</li>
+      </ul>
+    </div>
+
+    <div>
+      <h3 style="margin-bottom:16px">Arborescence proposée</h3>
+<pre class="tree"><span class="n">Accueil</span>
+├── <span class="n">Expertises</span>                 <span class="c">une page par métier (SEO + mémoire technique)</span>
+│   ├── Sécurité événementielle
+│   ├── Gardiennage et contrôle d'accès
+│   ├── Sûreté et Task Force
+│   ├── Sécurité incendie (SSIAP)
+│   ├── Équipes cynophiles
+│   ├── Intervention mobile
+│   └── Accueil et filtrage
+├── <span class="n">Secteurs</span>                   <span class="c">l'acheteur se reconnaît (modèle Fiducial, Wilson Security)</span>
+│   ├── Événementiel, culture et sport
+│   ├── Luxe et retail
+│   ├── Hôtellerie et restauration
+│   ├── Collectivités et établissements publics
+│   ├── Industrie, énergie et logistique
+│   ├── Bureaux, immobilier et copropriétés
+│   └── Chantiers et sites sensibles
+├── <span class="n">Références</span>                 <span class="c">études de cas filtrables par secteur et métier</span>
+├── <span class="n">Espace acheteurs</span>           <span class="c">le différenciateur, voir ci-dessus</span>
+├── <span class="n">Le groupe</span>
+│   ├── Histoire et dirigeants
+│   ├── Implantations       <span class="c">une page par agence : Gennevilliers, Lyon, Auxerre, Troyes…</span>
+│   ├── Conformité et labels
+│   └── Engagements RSE
+├── <span class="n">Recrutement</span>                <span class="c">offres, parcours carte professionnelle</span>
+├── <span class="n">Actualités et ressources</span>
+└── <span class="n">Demander un devis</span>          <span class="c">+ « Être rappelé » + téléphone 24/7</span></pre>
+    </div>
+
+    <div>
+      <h3 style="margin-bottom:6px">Déroulé de la page d'accueil</h3>
+      <p class="prose" style="margin-bottom:16px">Une page plus courte que l'actuelle : chaque bloc résume et renvoie vers sa page.</p>
+      <ol class="steps">
+        <li><div><b>Promesse et double appel à l'action.</b> <span>Accroche, sous-titre qui nomme événements et sites sensibles, boutons « Demander un devis » et « Espace acheteurs », téléphone 24/7.</span></div></li>
+        <li><div><b>Bandeau de preuves.</b> <span>CNAPS, certifications ISO, chiffres clés, logos de cinq ou six références majeures.</span></div></li>
+        <li><div><b>Expertises.</b> <span>Sept métiers en cartes courtes, chacune vers sa page.</span></div></li>
+        <li><div><b>Secteurs.</b> <span>Grille d'images réelles par secteur, sur le modèle de Seris et Securitas.</span></div></li>
+        <li><div><b>Une étude de cas mise en avant.</b> <span>Contexte, dispositif, résultat chiffré, citation du client.</span></div></li>
+        <li><div><b>Méthode.</b> <span>Du devis au reporting : audit, dispositif, encadrement, main courante électronique.</span></div></li>
+        <li><div><b>Implantations.</b> <span>Carte des agences et rayon d'intervention, sur le modèle de Groupe SGP.</span></div></li>
+        <li><div><b>Conformité et RSE.</b> <span>Encadré court, lien vers la page dédiée.</span></div></li>
+        <li><div><b>Recrutement.</b> <span>Bandeau discret vers « Nous rejoindre ».</span></div></li>
+        <li><div><b>Contact.</b> <span>Formulaire qualifié et option « Être rappelé ».</span></div></li>
+      </ol>
+    </div>
+
+    <div class="lists" style="margin-top:0">
+      <div>
+        <h3>Gains rapides, même avant la refonte</h3>
+        <ul class="clean">
+          <li>Harmoniser la liste des services et le nombre de bureaux sur tout le site.</li>
+          <li>Publier les certificats ISO avec organisme, numéro et date.</li>
+          <li>Ajouter une ligne fixe 24/7 si elle existe.</li>
+          <li>Ouvrir une page « Nous rejoindre ».</li>
+          <li>Rédiger deux ou trois études de cas avec l'accord des clients.</li>
+          <li>Compléter les données structurées : Organization, Service, une fiche LocalBusiness par agence.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>À valider avec Diamond Protect</h3>
+        <ul class="clean">
+          <li>Quels certificats et labels sont réellement détenus (ISO, MASE, EcoVadis) ?</li>
+          <li>Quels clients acceptent d'être cités en étude de cas ?</li>
+          <li>Existe-t-il une ligne fixe ou un poste de commandement 24/7 joignable ?</li>
+          <li>Combien de bureaux, et lesquels ouvrir en pages locales ?</li>
+          <li>Des photos réelles sont-elles disponibles, ou faut-il prévoir un shooting ?</li>
+          <li>Quelles pièces du dossier de candidature peuvent être publiques, et lesquelles réservées ?</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="methode" style="border-bottom:0">
+  <div class="wrap">
+    <div class="head">
+      <p class="label">Méthode et limites</p>
+      <h2>Comment ce benchmark a été construit</h2>
+    </div>
+    <div class="lists" style="margin-top:0">
+      <div>
+        <h3>Relevé</h3>
+        <ul class="clean">
+          <li>Pages d'accueil ouvertes le 24 octobre 2026 dans un navigateur automatisé (1440 × 900), bannières cookies fermées quand c'était possible.</li>
+          <li>Données extraites automatiquement : title, meta description, H1, H2, menu, boutons d'action, liens téléphone, polices, couleurs, vidéo, données structurées, mots-clés de conformité.</li>
+          <li>Ratios de la synthèse calculés sur ces données, puis vérifiés sur les captures.</li>
+          <li>Sites écartés car inaccessibles ou vides : Byblos Group, Lancry, G4S (fusionné dans Allied Universal), Kings Security.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Notation</h3>
+        <ul class="clean">
+          <li><b>Image haut de gamme</b> : qualité perçue, direction artistique, retenue.</li>
+          <li><b>Clarté de l'offre</b> : compréhension en moins de dix secondes, navigation.</li>
+          <li><b>Preuves et réassurance</b> : chiffres, certifications, références, témoignages.</li>
+          <li><b>Lecture acheteur</b> : secteurs, études de cas, conformité, documents.</li>
+          <li><b>Conversion</b> : appels à l'action, téléphone, formulaire.</li>
+          <li><b>Contenus</b> : actualités, analyses, ressources.</li>
+          <li>Notes d'analyste, donc subjectives : elles servent à comparer, pas à classer définitivement.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Benchmark préparé pour la maquette du site de Diamond Protect. Les captures sont celles des sites publics au 24 octobre 2026 et servent uniquement à l'analyse ; les marques citées appartiennent à leurs propriétaires.</p>
+  </div>
+</footer>
+
+<dialog id="dlg" aria-labelledby="dlg-title">
+  <div class="dlg-head"><h3 id="dlg-title"></h3><button class="close" id="dlg-close" type="button">Fermer</button></div>
+  <div class="dlg-body" id="dlg-body"></div>
+</dialog>
+
+<script>
+const CRIT=[["premium","Haut de gamme"],["clarte","Clarté"],["preuves","Preuves"],["acheteur","Acheteur"],["conversion","Conversion"],["contenu","Contenus"]];
+// s = [premium, clarte, preuves, acheteur, conversion, contenu]
+const SITES=[
+{id:"diamond",n:"Diamond Protect (site actuel)",c:"France",r:"France",p:"ETI française",u:"https://diamond-protect.fr/",h1:"La sûreté à l'état pur, pour vos événements & vos sites sensibles.",s:[4,3,4,2,3,2],pal:["#0E1219","#C9A45C","#F4F1EA"],font:"Fraunces / Inter Tight",plus:"Seule identité sérif et or du panel ; conformité CNAPS bien traitée ; dirigeants nommés.",minus:"Pas d'étude de cas, une seule page services, incohérences de contenu.",nav:"Accueil · Services · Conformité · Actualités · Contact · Demander un devis",cta:"Demander un devis gratuit · Contact",stats:"20 ans · 220+ collaborateurs · 100+ clients · 1000+ sites",tel:"06 05 82 71 82",self:true},
+{id:"seris",n:"Seris",c:"France",r:"France",p:"Grand groupe",u:"https://seris.fr/",h1:"1er groupe français sur le marché de la sécurité professionnelle",s:[3,3,4,3,3,4],pal:["#1B2A6B","#E30613","#FFFFFF"],font:"Source Sans Pro",plus:"Médaille EcoVadis Or affichée à la une ; blog avec une vraie marque éditoriale (« La Vigie »).",minus:"Page d'accueil courte et datée, titres en capitales, pas de meta description.",nav:"Qui sommes-nous ? · Nos solutions 360° · Votre secteur · Actualités · Contactez-nous · Rejoignez-nous",cta:"Contactez-nous",stats:"7000 collaborateurs · EcoVadis Gold top 4 %"},
+{id:"securitas-fr",n:"Securitas France",c:"France",r:"France",p:"Grand groupe",u:"https://www.securitas.fr/",h1:"Des solutions de sécurité pour protéger votre entreprise",s:[3,5,3,4,4,4],pal:["#031F30","#C2B4FC","#FFFFFF"],font:"Securitas Pro",plus:"Offre en onglets (huit services sans surcharger la page) ; témoignage client nominatif avec sa fonction.",minus:"Gabarit mondial identique dans chaque pays ; le violet lavande rassure peu.",nav:"Services · Solutions · Actualités et ressources · Contact et support · Emploi",cta:"Nous contacter · Découvrez nos services",stats:"Plus de 90 ans d'expérience"},
+{id:"fiducial",n:"Fiducial Sécurité",c:"France",r:"France",p:"Grand groupe",u:"https://www.fiducial-securite.fr/",h1:"L’expert français de la sécurité privée",s:[3,4,4,4,3,4],pal:["#00673E","#1E1E1E","#FFFFFF"],font:"Manrope",plus:"Triple entrée Secteurs / Risques / Prestations ; secteurs très précis (défense, justice, IGH) ; FAQ en bas d'accueil.",minus:"Vidéo plein écran au message peu lisible ; bannière cookies très intrusive.",nav:"Secteurs · Risques · Prestations · FIDUCIAL Sécurité · Blog · Carrière",cta:"Contactez-nous · Demandez votre devis",stats:"8 000 collaborateurs · 13 000 sites"},
+{id:"samsic",n:"Samsic Sécurité",c:"France",r:"France",p:"Grand groupe",u:"https://www.samsic.fr/services/securite/",h1:"Des agents professionnels au savoir-faire éprouvé pour la sécurité de vos sites et des usagers",s:[2,3,4,3,3,3],pal:["#24303B","#E30613","#FFFFFF"],font:"Roboto",plus:"Certifications citées en clair dans le texte (CNAPS, ISO 9001, MASE).",minus:"La sécurité est un métier parmi dix dans un site de services aux entreprises ; le chatbot masque le contenu.",nav:"Services · Agences · Nos engagements · Samsic Groupe · Carrières · Actualités",cta:"Contact · Devis",stats:"(aucun chiffre en tête de page)"},
+{id:"torann",n:"Torann France",c:"France",r:"France",p:"ETI française",u:"https://www.torann-france.fr/",h1:"ENGAGÉS POUR VOTRE SÉCURITÉ",s:[4,4,5,4,4,2],pal:["#E30613","#1A1A1A","#FFFFFF"],font:"Druk Wide / DIN Next",plus:"Chiffres qui parlent aux acheteurs, chiffre d'affaires compris ; espaces client, agent et exploitant ; carte de 14 agences ; certifications et partenaires.",minus:"Titres tout en capitales ; chiffres en contour peu lisibles ; pas de contenus éditoriaux.",nav:"Le groupe · Solutions de sécurité · Notre équipe · Formation · Recrutement",cta:"Une mission à nous confier ? Contact",stats:"39 ans d'indépendance · 2800 collaborateurs · CA 104 M€ · 353 sites",tel:"01 56 05 24 24"},
+{id:"goron",n:"Goron",c:"France",r:"France",p:"ETI française",u:"https://www.goron.fr/",h1:"(pas de H1)",s:[2,3,4,3,4,3],pal:["#0C3F88","#E30613","#FFFFFF"],font:"Lato",plus:"Rubrique « Réglementation » dans le menu : pédagogie utile aux acheteurs ; EcoVadis Or trois années de suite.",minus:"Accueil fait de cartes semi-transparentes, pas de H1, design daté.",nav:"La société Goron · Nos atouts · Nos services · Votre secteur · Formations & carrières · Réglementation · Contact",cta:"Demander un devis · Contactez-nous",stats:"130 ans · 4500 collaborateurs"},
+{id:"sgp",n:"Groupe SGP",c:"France",r:"France",p:"ETI française",u:"https://groupesgp.fr/",h1:"(pas de H1)",s:[4,4,5,4,5,3],pal:["#0A0A0A","#4A2B5E","#FFFFFF"],font:"Geist",plus:"Carte des agences en ouverture ; bloc chiffres financiers (CA, fonds propres, satisfaction client) ; bouton « Être rappelé ».",minus:"Pas de H1 ; grands aplats sombres peu remplis.",nav:"Nos services · Le groupe · Presse & actus · Nous rejoindre · Contactez nos experts",cta:"Contactez nos experts · Être rappelé",stats:"CA 2025 104 M€ · fonds propres 8,4 M€ · satisfaction 94,4 % · 2618 collaborateurs",tel:"03 87 61 11 60"},
+{id:"triomphe",n:"Triomphe Sécurité",c:"France",r:"France",p:"ETI française",u:"https://www.triomphe-securite.fr/",h1:"(pas de H1)",s:[3,3,4,4,2,3],pal:["#1B2A5E","#E30613","#DDDDDD"],font:"Open Sans",plus:"Spécialisation verticale assumée (commerce, centres commerciaux, parcs de loisirs) ; pages « Éthique et déontologie » et « Engagements clients ».",minus:"Pas de H1 ; actualités remplies d'offres d'emploi sur l'accueil.",nav:"Expertises métier · À propos · Valeurs · Rejoignez-nous · Actus · Contact",cta:"Contact · Toutes nos prestations",stats:"3700 collaborateurs · 20 ans · 700 sites"},
+{id:"securitas",n:"Securitas Group",c:"Suède",r:"Europe",p:"Grand groupe",u:"https://www.securitas.com/",h1:"Security with world-leading technology and expertise",s:[4,4,3,2,2,5],pal:["#031F30","#C2B4FC","#E2231A"],font:"Securitas Pro",plus:"Rapport annuel de tendances (« Global Technology Outlook ») utilisé comme aimant à contacts.",minus:"Site d'abord tourné vers les investisseurs.",nav:"Security services · Industries · About us · Investors · Sustainability · Newsroom · Careers",cta:"Access the report · Contact us",stats:"90 years"},
+{id:"protectas",n:"Protectas",c:"Suisse",r:"Europe",p:"Grand groupe",u:"https://www.protectas.com/fr-CH/",h1:"Des services de sécurité qui protègent votre activité",s:[4,5,3,4,4,3],pal:["#031F30","#C2B4FC","#FFFFFF"],font:"Securitas Pro",plus:"Visuel de télésurveillance réel en ouverture ; message d'expertise : « 50 ans d'expérience nous ont appris d'où viennent réellement les risques ».",minus:"Même gabarit que Securitas France, aucune différenciation locale.",nav:"Produits et services · Solutions de sécurité · Actualités et analyses · Contact et assistance · Carrière",cta:"Contactez-nous · Découvrez nos services",stats:"50 ans"},
+{id:"corps",n:"Corps Security",c:"Royaume-Uni",r:"Europe",p:"Spécialiste",u:"https://www.corpssecurity.co.uk/",h1:"SPECIALIST SECURITY SERVICES",s:[3,4,5,5,4,4],pal:["#8B1D3F","#1A1A1A","#FFFFFF"],font:"Open Sans",plus:"Compteurs avec pictogrammes, mur d'accréditations, témoignage de CBRE ; statut d'entreprise sociale et rapport ESG : la valeur sociale comme argument d'appel d'offres.",minus:"En-tête surchargé (boutique, deux espaces de connexion, deux numéros).",nav:"Our Story · Security Services · Technology & Innovation · Social Values · Case Studies · Work For Us · Insights · Contact Us",cta:"Contact Us",stats:"Depuis 1859 · 3000+ agents · 500+ clients · 1500+ sites surveillés",tel:"0207 566 0500"},
+{id:"wilsonjames",n:"Wilson James",c:"Royaume-Uni",r:"Europe",p:"Haut de gamme",u:"https://wilsonjames.co.uk/",h1:"Solving complex security, logistics and operational challenges, we are Wilson James",s:[5,4,3,4,3,3],pal:["#1E1E2A","#3D2CEB","#F2F3F6"],font:"Neue Haas Grotesk",plus:"Titres éditoriaux de très grande taille ; offre résumée en quatre verbes (Secure, Move, Support, Optimise) ; secteurs en étiquettes.",minus:"Le bleu électrique du bouton contact détonne avec le reste.",nav:"How we help · Industries · About us · Our Community · Careers · Contact us",cta:"Contact us",stats:"300 clients · 35 ans"},
+{id:"mitie",n:"Mitie",c:"Royaume-Uni",r:"Europe",p:"Grand groupe",u:"https://www.mitie.com/",h1:"The UK’s leader in facilities management, transformation and compliance",s:[3,3,3,4,4,4],pal:["#5A1E6E","#009FDF","#F5F3EE"],font:"Gill Sans Nova",plus:"Cartes étiquetées « Secteur » et « Service » dès l'ouverture.",minus:"La sécurité est diluée dans le facility management.",nav:"What we do · What we think · About us · Investors · Contact us",cta:"Contact us · Let’s talk",stats:"(aucun chiffre en tête de page)"},
+{id:"blackstone",n:"Blackstone Consultancy",c:"Royaume-Uni",r:"Europe",p:"Haut de gamme",u:"https://blackstoneconsultancy.com/",h1:"PAYMENT SECURITY ALERT: OUR BANK DETAILS HAVE NOT CHANGED…",s:[4,4,3,2,3,1],pal:["#000000","#C7884F","#FFFFFF"],font:"Inter",plus:"Portraits de toute l'équipe et citation presse (Spear's 2025) : la crédibilité d'une maison de protection rapprochée ; vocabulaire de la discrétion.",minus:"Le H1 est une alerte à la fraude ; title « Homepage - Blackstoneconsultancy ».",nav:"About us · Protection · Investigations · Property · Careers · Contact us",cta:"Contact us",stats:"30 et 40 ans d'expérience cités",tel:"+44 20 3833 1061"},
+{id:"showsec",n:"Showsec",c:"Royaume-Uni",r:"Europe",p:"Spécialiste",u:"https://showsec.co.uk/",h1:"We Are The Leading Event Security & Crowd Management Specialists",s:[3,5,5,4,4,4],pal:["#1D2B4F","#FFE600","#5B2A86"],font:"Montserrat",plus:"Chiffres propres à l'événementiel (20 000+ événements par an) ; trois portes : lieux, événements, sport ; accréditations, récompenses, témoignages et vidéo.",minus:"Offres d'emploi au milieu de l'accueil client.",nav:"About Us · Services · Jobs · News · Case Studies · Group Companies · Get in Touch",cta:"Get in Touch · Available Jobs",stats:"20 000+ événements/an · 5000+ agents · 48 ans · 12 bureaux",tel:"+44 116 204 3333"},
+{id:"koetter",n:"Kötter Services",c:"Allemagne",r:"Europe",p:"Grand groupe",u:"https://www.koetter.de/",h1:"KÖTTER Services",s:[2,4,3,3,4,3],pal:["#FFD200","#1E3C78","#FFFFFF"],font:"Roboto",plus:"Barre « Je cherche… » et recherches fréquentes dans l'ouverture ; localisateur d'agence.",minus:"H1 réduit au nom de marque.",nav:"Leistungen · Branchen · Über uns · Akademie · Jobs & Karriere",cta:"Kontakt · Kontaktformular",stats:"Depuis 1934",tel:"+49 201 2788 388"},
+{id:"sicuritalia",n:"Sicuritalia",c:"Italie",r:"Europe",p:"Grand groupe",u:"https://www.sicuritalia.it/",h1:"(pas de H1)",s:[2,4,3,4,5,3],pal:["#103073","#E30613","#FFFFFF"],font:"Roboto",plus:"Entrée « Administration publique » dans la navigation principale ; numéro vert, calculateur de devis, chat.",minus:"Ton grand public et carrousel.",nav:"Casa · Negozi e uffici · Aziende · Pubblica amministrazione · Chi siamo · Casi di successo",cta:"Calcola il tuo preventivo",stats:"Depuis 1956 · 100 000 clients",tel:"800 920 120"},
+{id:"trigion",n:"Trigion",c:"Pays-Bas",r:"Europe",p:"Grand groupe",u:"https://www.facilicom.nl/trigion-beveiliging",h1:"Trigion, de grootste veiligheidspartner van Nederland",s:[3,4,3,4,4,4],pal:["#1A3C8C","#E52A1F","#FFFFFF"],font:"Museo Sans",plus:"Actualités, blogs et cas clients réunis dans un seul bloc ; approche par secteur.",minus:"Intégré au site du groupe Facilicom : la marque perd son identité.",nav:"Veiligheidsoplossingen · Sectoren · Over Trigion · Werken bij · Nieuws",cta:"Neem contact op",stats:"8 000 clients"},
+{id:"prosegur",n:"Prosegur",c:"Espagne",r:"Europe",p:"Grand groupe",u:"https://www.prosegur.com/",h1:"(pas de H1)",s:[3,2,3,1,1,3],pal:["#FFD100","#000000","#FFFFFF"],font:"Open Sans",plus:"Jeu typographique sur le logo pour les 50 ans (« P50SEGUR »).",minus:"Page corporate et boursière sans parcours client.",nav:"Sobre Prosegur · Líneas de negocio · Sostenibilidad · Accionistas e inversores · Trabaja con nosotros",cta:"Contacto IR",stats:"50 años · 31 pays"},
+{id:"controlrisks",n:"Control Risks",c:"Royaume-Uni",r:"Europe",p:"Haut de gamme",u:"https://www.controlrisks.com/",h1:"The Africa Risk-Reward Index 2026",s:[4,4,3,3,3,5],pal:["#0D3B4F","#D2AE34","#2BB3A3"],font:"Open Sans",plus:"Or sobre sur fond clair : haut de gamme sans ostentation ; rapports propriétaires (RiskMap) qui font autorité ; page « Experts ».",minus:"Le H1 est un rapport, pas la promesse.",nav:"What We Do · Experts · Insights · Who We Are · Careers · Contact us",cta:"Download the report · Contact us",stats:"50 ans"},
+{id:"allied",n:"Allied Universal",c:"États-Unis",r:"Amériques",p:"Grand groupe",u:"https://www.aus.com/",h1:"Security Services and Facility Solutions Local Execution | National Scale",s:[2,3,3,4,4,4],pal:["#0073A8","#F47B20","#FFFFFF"],font:"Trade Gothic Condensed",plus:"« Local Execution, National Scale » : l'équation exacte de Diamond Protect (proximité régionale, capacité nationale).",minus:"Ouverture bleue vide ; méga-menu de plus de 40 entrées.",nav:"Services · Industries · Resources · Offices · About us · Careers",cta:"Contact Us · Talk to an Expert",stats:"65 years",tel:"+1 866 703 7666"},
+{id:"garda",n:"GardaWorld",c:"Canada",r:"Amériques",p:"Grand groupe",u:"https://www.garda.com/",h1:"The proven alternative to security as you know it",s:[4,4,3,4,3,4],pal:["#D52B1E","#2B2B2B","#FFFFFF"],font:"Neue Helvetica",plus:"Ton de challenger assumé ; la qualité des agents comme preuve (« we hire people who care ») ; portail client.",minus:"Fenêtre de choix de région à l'arrivée.",nav:"What we do · Who we serve · Where we are · Insights · Join us · Contact us",cta:"Contact us · Learn how",stats:"30 years"},
+{id:"pinkerton",n:"Pinkerton",c:"États-Unis",r:"Amériques",p:"Haut de gamme",u:"https://www.pinkerton.com/",h1:"A leader in security and risk management services, solutions, and programs.",s:[4,4,4,5,4,4],pal:["#232323","#7FA7F0","#FFFFFF"],font:"Arial",plus:"« Request a consult » plutôt que « devis » : posture de conseil ; études de cas classées par type de mission, clients anonymisés ; héritage « Trusted since 1850 ».",minus:"H1 générique.",nav:"Services · Insights · Who we are · Request a consult · Careers",cta:"Meet with an expert · Request a consult",stats:"175 ans"},
+{id:"constellis",n:"Constellis",c:"États-Unis",r:"Amériques",p:"Haut de gamme",u:"https://constellis.com/",h1:"PEOPLE PREPARED. MISSIONS PROTECTED. OUTCOMES SECURED.",s:[5,4,3,4,3,4],pal:["#0F1E33","#1E5AA8","#FFFFFF"],font:"Europa",plus:"Fond sombre, photos de nuit, devise en trois temps (proche de « Protéger. Prévenir. Rassurer. ») ; « Éthique, politiques et certifications » dans le menu.",minus:"Tout en capitales.",nav:"Who We Are · People · Technology · Critical Services · Training · Careers",cta:"Contact Us",stats:"65+ years",tel:"+1 866 349 1506"},
+{id:"csc",n:"CSC",c:"États-Unis",r:"Amériques",p:"Spécialiste",u:"https://csc-usa.com/home",h1:"The Leader in Crowd Management",s:[2,2,4,3,2,2],pal:["#2A2A7A","#E3A72F","#FFFFFF"],font:"Montserrat",plus:"Certification de référence (SAFETY Act) placée dans la promesse ; statut d'entreprise détenue par ses salariés.",minus:"Bannière cookies cassée (« Updated: undefined ») ; page lente.",nav:"About Us · Newsfeed · Services · Locations · Apply · Employee-Owned · Safety Act",cta:"Join Us",stats:"Plus de cinq décennies"},
+{id:"amarok",n:"Amarok",c:"États-Unis",r:"Amériques",p:"Technologie",u:"https://amarok.com/",h1:"The Smarter Approach to Commercial Perimeter Security",s:[2,4,4,3,5,4],pal:["#E31E24","#231F1F","#FFFFFF"],font:"Helvetica Neue Condensed",plus:"Conversion très outillée : téléphone en barre haute, « trouver mon interlocuteur local », chat avec un expert.",minus:"Pression commerciale (chat vidéo intrusif) incompatible avec le haut de gamme.",nav:"Solutions · Industries · Who We Are · Resources · Find my local rep",cta:"Chat with an expert · Call us · Talk to an expert",stats:"9 000 clients · 5x ROI",tel:"+1 855 461 2391"},
+{id:"certis",n:"Certis",c:"Singapour",r:"Asie-Pacifique",p:"Technologie",u:"https://www.certisgroup.com/",h1:"(pas de H1)",s:[4,3,3,3,2,4],pal:["#1F3A93","#F39200","#FFFFFF"],font:"Lato",plus:"La technologie montrée en action : vidéo aérienne avec détections en surimpression, robot de patrouille « Wallace ».",minus:"Pas de H1 ni d'appel à l'action clair.",nav:"About · News & Insights · Certis Difference · Industries · Solutions · Careers",cta:"Explore its capabilities",stats:"(aucun chiffre en tête de page)"},
+{id:"wilsonsec",n:"Wilson Security",c:"Australie",r:"Asie-Pacifique",p:"Grand groupe",u:"https://www.wilsonsecurity.com.au/",h1:"Integrated Security Solutions",s:[3,5,3,5,5,3],pal:["#0F1B3D","#FF0000","#FFFFFF"],font:"Eina / Untitled Sans",plus:"« Our business is protecting yours » ; double entrée services et secteurs (défense, gouvernement, grands événements) ; téléphone en bouton rouge dans la barre haute.",minus:"Cadre décoratif superflu autour de l'ouverture.",nav:"Services · Sectors · Solutions · Insights · Sustainability · About · Careers",cta:"Request a Quote · Call 1300 945 766",stats:"(aucun chiffre en tête de page)",tel:"1300 945 766"}
+];
+SITES.forEach(x=>{x.total=+(x.s.reduce((a,b)=>a+b,0)/6).toFixed(1); CRIT.forEach(([k],i)=>x[k]=x.s[i]);});
+
+const PICKS=[
+ ["wilsonjames","La meilleure direction éditoriale du panel.","Titres immenses, offre en quatre verbes, secteurs en étiquettes : un modèle pour structurer « Protéger. Prévenir. Rassurer. »."],
+ ["torann","L'ETI française la plus convaincante pour un acheteur.","Chiffre d'affaires, effectifs et sites affichés, espaces client et agent, carte des agences, certifications."],
+ ["sgp","La référence française moderne.","Carte des agences en ouverture, solidité financière chiffrée, satisfaction client, bouton « Être rappelé »."],
+ ["showsec","Le modèle pour la sécurité événementielle.","Chiffres d'activité événementielle, entrées par type de lieu, accréditations, témoignages, vidéo terrain."],
+ ["constellis","Le haut de gamme sombre bien exécuté.","Photos de nuit, devise en trois temps, rubrique éthique et certifications accessible du menu."],
+ ["corps","La meilleure démonstration de preuves.","Compteurs, mur d'accréditations, témoignage d'un grand compte, études de cas, rapport ESG."],
+ ["pinkerton","La posture de conseil.","« Request a consult », études de cas classées par mission, héritage mis en scène."],
+ ["controlrisks","L'or utilisé avec retenue.","Or sobre sur fond clair et rapports propriétaires qui installent l'autorité."]
+];
+
+const $=s=>document.querySelector(s);
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const byId=Object.fromEntries(SITES.map(x=>[x.id,x]));
+
+$("#picks").innerHTML=PICKS.map(([id,why,take])=>{const x=byId[id];return `<article class="pick">
+  <img src="img/${x.id}.jpg" alt="Page d'accueil de ${esc(x.n)}" data-open="${x.id}">
+  <div class="body"><div class="title"><h3>${esc(x.n)}</h3><span class="tag">${esc(x.c)}</span><span class="tag">${esc(x.p)}</span><span class="score num">${x.total.toFixed(1)} / 5</span></div>
+  <p><b>${esc(why)}</b></p><p class="take"><b>À reprendre :</b> ${esc(take)}</p>
+  <p class="label"><a href="${x.u}" target="_blank" rel="noopener">${esc(x.u.replace(/^https?:\/\/(www\.)?/,"").replace(/\/$/,""))}</a></p></div></article>`}).join("");
+
+const state={region:"Toutes",profil:"Tous",sort:"total"};
+try{const v=localStorage.getItem("bm-sort"); if(v) state.sort=v;}catch(e){}
+$("#sort").value=state.sort;
+function chips(el,key,opts){el.innerHTML=opts.map(o=>`<button type="button" class="chip" aria-pressed="${state[key]===o}" data-k="${key}" data-v="${o}">${o}</button>`).join("");}
+const REGIONS=["Toutes","France","Europe","Amériques","Asie-Pacifique"], PROFILS=["Tous","Grand groupe","ETI française","Haut de gamme","Spécialiste","Technologie"];
+function bars(x){return `<div class="bars">${CRIT.map(([k,l])=>`<span>${l}</span><span class="bar"><i style="width:${x[k]*20}%"></i></span><span class="num">${x[k]}</span>`).join("")}</div>`;}
+function render(){
+  chips($("#f-region"),"region",REGIONS); chips($("#f-profil"),"profil",PROFILS);
+  let list=SITES.filter(x=>(state.region==="Toutes"||x.r===state.region)&&(state.profil==="Tous"||x.p===state.profil));
+  list.sort((a,b)=>state.sort==="nom"?a.n.localeCompare(b.n,"fr"):(b[state.sort]-a[state.sort])||(b.total-a.total));
+  const self=list.findIndex(x=>x.self); if(self>0&&state.sort!=="nom") list.unshift(list.splice(self,1)[0]);
+  $("#count").textContent=`${list.filter(x=>!x.self).length} site${list.length>1?"s":""} affiché${list.length>1?"s":""}`;
+  $("#grid").innerHTML=list.map(x=>`<article class="card${x.self?" self":""}">
+    <button class="shot" type="button" data-open="${x.id}" aria-label="Agrandir la capture de ${esc(x.n)}"><img src="img/${x.id}.jpg" alt=""></button>
+    <div class="content">
+      <div class="meta"><span class="tag${x.self?" gold":""}">${esc(x.c)}</span><span class="tag">${esc(x.p)}</span></div>
+      <h3>${esc(x.n)}<span class="score num">${x.total.toFixed(1)}</span></h3>
+      <p class="h1q">${esc(x.h1)}</p>
+      ${bars(x)}
+      <p class="note plus"><b>À reprendre.</b> ${esc(x.plus)}</p>
+      <p class="note minus"><b>À éviter.</b> ${esc(x.minus)}</p>
+      <div class="foot"><div class="swatches">${x.pal.map(c=>`<i style="background:${c}" title="${c}"></i>`).join("")}<span>${esc(x.font)}</span></div>
+      <button class="linkbtn" type="button" data-open="${x.id}">Détails</button></div>
+    </div></article>`).join("");
+}
+document.addEventListener("click",e=>{
+  const c=e.target.closest(".chip"); if(c){state[c.dataset.k]=c.dataset.v; render(); return;}
+  const o=e.target.closest("[data-open]"); if(o){openDlg(o.dataset.open);}
+});
+$("#sort").addEventListener("change",e=>{state.sort=e.target.value; try{localStorage.setItem("bm-sort",state.sort)}catch(_){} render();});
+const dlg=$("#dlg");
+function openDlg(id){const x=byId[id];
+  $("#dlg-title").textContent=x.n;
+  $("#dlg-body").innerHTML=`<img src="img/${x.id}.jpg" alt="Page d'accueil de ${esc(x.n)}">
+  <dl class="kv">
+    <dt>Adresse</dt><dd><a href="${x.u}" target="_blank" rel="noopener">${esc(x.u)}</a></dd>
+    <dt>Pays · profil</dt><dd>${esc(x.c)} · ${esc(x.p)}</dd>
+    <dt>H1 relevé</dt><dd>${esc(x.h1)}</dd>
+    <dt>Menu principal</dt><dd>${esc(x.nav)}</dd>
+    <dt>Appels à l'action</dt><dd>${esc(x.cta)}</dd>
+    <dt>Chiffres affichés</dt><dd>${esc(x.stats)}</dd>
+    <dt>Téléphone visible</dt><dd>${esc(x.tel||"non cliquable en page d'accueil")}</dd>
+    <dt>Typographie</dt><dd>${esc(x.font)}</dd>
+    <dt>Note globale</dt><dd class="num">${x.total.toFixed(1)} / 5</dd>
+    <dt>À reprendre</dt><dd>${esc(x.plus)}</dd>
+    <dt>À éviter</dt><dd>${esc(x.minus)}</dd>
+  </dl>${bars(x)}`;
+  if(dlg.showModal) dlg.showModal(); else dlg.setAttribute("open","");
+}
+$("#dlg-close").addEventListener("click",()=>dlg.close());
+dlg.addEventListener("click",e=>{if(e.target===dlg) dlg.close();});
+render();
+
+// tendances
+const FEAT=[["Actualités ou blog",24],["Parcours recrutement",23],["Vidéo en ouverture",14],["Chat ou assistant",14],["Téléphone cliquable",11],["Appel « devis » ou « consultation » explicite",8],["Études de cas",8,1],["Médaille EcoVadis mise en avant",3,1],["Entrée dédiée au secteur public",1,1],["Titres à empattements",0,1]];
+$("#chart").innerHTML=FEAT.map(([l,v,h])=>`<div class="row${h?" hl":""}"><span>${l}</span><span class="track"><i style="width:${v/28*100}%"></i></span><b class="num">${v}</b></div>`).join("")+
+ `<div class="axis"><div></div><div><span>0</span><span>7</span><span>14</span><span>21</span><span>28</span></div><div></div></div>`;
+const hue=h=>{const r=parseInt(h.slice(1,3),16)/255,g=parseInt(h.slice(3,5),16)/255,b=parseInt(h.slice(5,7),16)/255;const mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn;if(d<.08)return 400+(1-mx)*10;let H=mx===r?((g-b)/d)%6:mx===g?(b-r)/d+2:(r-g)/d+4;return ((H*60)+360+30)%360;};
+const doms=SITES.filter(x=>!x.self).map(x=>({c:x.pal[0],n:x.n})).sort((a,b)=>hue(a.c)-hue(b.c));
+$("#palette").innerHTML=doms.map(d=>`<i style="background:${d.c}" title="${esc(d.n)} · ${d.c}"></i>`).join("");
+
+// comparaison
+const panel=SITES.filter(x=>!x.self), dp=byId.diamond;
+$("#compare").innerHTML=CRIT.map(([k,l])=>{const avg=panel.reduce((a,x)=>a+x[k],0)/panel.length;return `<div class="cmp"><span>${l}</span><span class="t"><span class="dp" style="width:${dp[k]*20}%"></span><span class="avg" style="left:${avg*20}%" title="Moyenne ${avg.toFixed(1)}"></span></span><b class="num">${dp[k]}</b></div>`}).join("");
+</script>
