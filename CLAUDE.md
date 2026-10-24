@@ -1,6 +1,6 @@
 # Diamond Protect : refonte du site (repo principal)
 
-> **Phase en cours : MAQUETTAGE.** On conçoit le futur site de Diamond Protect en HTML/CSS dans ce dépôt. Le site actuel reste en ligne sur `diamond-protect.fr` et **ce dépôt ne le publie pas**.
+> **Phase en cours : MAQUETTAGE.** On conçoit le futur site de Diamond Protect en HTML/CSS dans ce dépôt. Page d'accueil v0.1 dans [`maquette/`](maquette/README.md), prévisualisation : https://claude.ai/artifact/FrePLXeLV4UzmMSeBg5N8A · Le site actuel reste en ligne sur `diamond-protect.fr` et **ce dépôt ne le publie pas**.
 > **Ordre de lecture** : ① ce fichier → ② [`benchmark/`](benchmark/README.md) (la veille de 28 sites, publiée en page : https://claude.ai/artifact/WQ6XXqBYHpnVcNHu2HPHBQ) → ③ la section « Points ouverts » en bas, avant toute décision qui en dépend.
 > Contexte relevé le **24/10/2026** sur le site en ligne. Ce qui bouge (chiffres, labels, bureaux, références) se revérifie sur la source, pas dans ce fichier.
 
@@ -60,7 +60,7 @@
 
 Détail et captures dans [`benchmark/`](benchmark/README.md). Les décisions qui en sortent :
 
-- **Garder l'identité marine profond et or, et les titres à empattements.** Aucun des 28 sites du panel n'a de titres à empattements ; c'est le territoire haut de gamme libre.
+- **Identité visuelle (décision du 24/10/2026, remplace le marine et or du site actuel)** : bleu nuit et turquoise du logo d'origine (`#239995`), titres en linéale technique condensée (Archivo), étiquettes en chasse fixe, motif du diamant en filaire. Objectif : une image plus « sûreté, sécurité » que le site actuel, sans perdre le haut de gamme. Détail dans [`maquette/README.md`](maquette/README.md).
 - **Créer un « Espace acheteurs »** : aucun concurrent ne l'a. Il regroupe l'autorisation CNAPS (avec lien de vérification), les certificats (organisme, numéro, validité), les attestations et l'assurance (publiques ou sur demande), les chiffres de solidité, les références par secteur, le processus de reprise d'un marché, les engagements de service et un interlocuteur dédié.
 - **Une page par métier, par secteur et par agence** (le site actuel n'a qu'une page services).
 - **Des études de cas**, au format contexte, dispositif, résultat chiffré, citation (8 sites sur 28 en ont).
@@ -90,22 +90,18 @@ Accueil
 ## Cadre technique de la maquette
 
 - **Code HTML/CSS dans ce dépôt**, pensé pour devenir le vrai site. Proposition par défaut : **Astro en sortie statique** (gabarits et composants partagés entre la vingtaine de pages, pas de framework JS côté client), déployable plus tard sur Netlify comme le site actuel. Si le client préfère du HTML pur, on garde la même organisation en fichiers.
-- **Design system de départ = les tokens du site actuel**, à reprendre puis affiner :
-  - fonds `--bg #0e1219`, `--bg-2 #141a24`, `--bg-elevated #1b2331`, `--navy #182030` ;
-  - or `--gold #D4A955`, `--gold-soft #E6C074`, `--gold-deep #9c7d3f` ;
-  - texte `--text #ECEFF4`, `--muted #aab6c4` ;
-  - polices **Fraunces** (titres), **Inter Tight** (texte), **JetBrains Mono** (données) ;
-  - logos `assets/logo.svg` et `assets/logo-blanc.svg` à récupérer sur le site en ligne.
-- Le site actuel est entièrement sombre : prévoir des **sections claires en alternance** pour la lisibilité des pages longues.
+- **Design system** : tokens dans `maquette/src/styles/global.css` (bleu nuit `#0a1a22`, turquoise `#239995` / `#3cc8c1` / `#15706c`, gris acier `#eef2f3`, ambre `#e2a23b` réservé aux marqueurs « à confirmer »). Polices **Archivo** et **JetBrains Mono**. Logos d'origine dans `maquette/public/logo/` (turquoise et blanc).
+- **Faits affichés** : uniquement depuis `maquette/src/data/site.ts`.
+- Sections sombres et sections claires gris acier **en alternance** pour la lisibilité des pages longues.
 - **Exigences** : responsive dès 360 px, accessibilité AA (contrastes de l'or sur fond clair à vérifier), pas de cookies publicitaires (engagement des mentions légales actuelles), données structurées (Organization, Service, une fiche LocalBusiness par agence, BreadcrumbList).
-- **Photos provisoires** : Unsplash, chacune marquée `data-photo="provisoire"` et listée dans le brief photo (`maquette/BRIEF-PHOTO.md`) avec la scène à shooter pour la remplacer (PC sécurité, filtrage d'événement, binôme cynophile, ronde de nuit, chef de dispositif, accueil).
+- **Photos provisoires** : chacune marquée `data-photo="provisoire"` et listée dans le brief photo (`maquette/BRIEF-PHOTO.md`) avec la scène à shooter pour la remplacer (PC sécurité, filtrage d'événement, binôme cynophile, ronde de nuit, chef de dispositif, accueil).
 
 ## Organisation du dépôt
 
 | Dossier | Rôle |
 |---|---|
 | `benchmark/` | La veille de 28 sites : page interactive, captures, données relevées. Figé au 24/10/2026. |
-| `maquette/` | *(à créer)* Le code de la maquette et son brief photo. |
+| `maquette/` | Le code de la maquette (Astro), son README et son brief photo. |
 | `contenus/` | *(à créer)* Les textes proposés, page par page, avec leur statut : proposé, validé par le client, à reprendre. |
 | `docs/` | *(à créer)* Les décisions prises avec le client (datées) et le journal des livraisons. |
 
@@ -125,6 +121,9 @@ Accueil
 | Code et accès du site actuel | Où vit le code source ? Qui a l'accès Netlify et le domaine ? | Mise en ligne future, redirections |
 | Photos réelles | Shooting prévu plus tard : date, lieux, autorisations des clients filmés | Remplacement des photos provisoires |
 | Photo « été 2024 » | Droit d'évoquer l'événement par son nom ? | Légendes, études de cas |
+| Photos du site actuel | Elles semblent générées par IA (format 1408 × 768 identique, panneaux en anglais) mais sont légendées « dispositifs réels » | Crédibilité du site actuel ; shooting à avancer |
+| Délai de transmission des pièces | Délai pour envoyer attestations et assurance aux acheteurs | Espace acheteurs |
+| Interlocuteur appels d'offres | Nom ou fonction du contact dédié | Espace acheteurs, contact |
 
 ## Hygiène git
 

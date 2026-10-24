@@ -1,0 +1,66 @@
+---
+import Icon from './Icon.astro';
+import Confirm from './Confirm.astro';
+import { societe } from '../data/site';
+---
+<section class="section light" id="conformite" aria-labelledby="conf-titre">
+  <div class="container in">
+    <div class="block cnaps viewfinder">
+      <p class="label">Cadre légal</p>
+      <h2 id="conf-titre">Une activité strictement encadrée par le CNAPS.</h2>
+      <p class="muted">Diamond Protect exerce sous le contrôle du Conseil national des activités privées de sécurité, conformément au livre VI du Code de la sécurité intérieure. Tous nos agents sont titulaires d'une carte professionnelle en cours de validité.</p>
+      <dl class="ids">
+        <div><dt>Autorisation d'exercice</dt><dd class="mono">{societe.cnaps}</dd></div>
+        <div><dt>Code de déontologie</dt><dd>CSI, livre VI</dd></div>
+        <div><dt>Tenues</dt><dd>Marquage « Sécurité privée », arrêté du 18 juillet 2023</dd></div>
+      </dl>
+      <blockquote>« {societe.mentionL612_14} » <cite>Art. L.612-14 du Code de la sécurité intérieure</cite></blockquote>
+      <a class="btn btn-ghost" href="https://www.cnaps.interieur.gouv.fr/" target="_blank" rel="noopener">Vérifier sur le site du CNAPS <Icon name="arrow" /></a>
+    </div>
+    <div class="block rse">
+      <p class="label">Engagements RSE</p>
+      <h3>Une sécurité performante et responsable.</h3>
+      <div class="kpis">
+        <p><span class="num">≥ 60 %</span>de trajets en électrique sur la flotte d'intervention</p>
+        <p><span class="num">≤ 18 g</span>de CO₂ par kilomètre, flotte électrique et hybride</p>
+      </div>
+      <ul>
+        <li><Icon name="check" /> Formation, inclusion et évolution des équipes</li>
+        <li><Icon name="check" /> Fournisseurs choisis pour leurs engagements sociaux et environnementaux</li>
+        <li><Icon name="check" /> Recyclage, réemploi et dématérialisation</li>
+      </ul>
+      <div class="labels">
+        <span>ISO 9001</span><span>ISO 14001</span><span>ISO 45001</span>
+        <Confirm texte="Certificats à fournir" />
+        <span class="opt">Notation EcoVadis · MASE</span><Confirm texte="Détenus ?" />
+      </div>
+    </div>
+  </div>
+</section>
+<style>
+  .in { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 24px; align-items: stretch; }
+  .block { background: var(--white); padding: clamp(28px, 4vw, 48px); display: grid; gap: 20px; align-content: start; min-width: 0; }
+  .cnaps h2 { font-size: clamp(1.9rem, 3.4vw, 2.8rem); }
+  .ids { margin: 0; display: grid; gap: 0; border-top: 1px solid var(--steel-2); }
+  .ids div { display: grid; grid-template-columns: 12em minmax(0, 1fr); gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--steel-2); }
+  .ids dt { font: 500 .72rem/1.6 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted-light); }
+  .ids dd { margin: 0; font-weight: 600; overflow-wrap: anywhere; }
+  .ids .mono { font-family: var(--f-mono); font-size: .86rem; color: var(--teal-deep); }
+  blockquote { margin: 0; padding: 16px 18px; background: var(--steel); border-left: 3px solid var(--teal-deep); font-size: .95rem; }
+  cite { display: block; margin-top: 6px; font: normal 500 .72rem/1.4 var(--f-mono); letter-spacing: .06em; color: var(--muted-light); }
+  .cnaps .btn { justify-self: start; }
+  .rse { background: var(--night); color: var(--text-dark); }
+  .rse .label { color: var(--teal-bright); }
+  .rse h3 { font-size: clamp(1.6rem, 2.6vw, 2.1rem); }
+  .kpis { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .kpis p { display: grid; gap: 6px; font-size: .88rem; color: var(--muted-dark); padding-top: 14px; border-top: 1px solid var(--line-dark-2); }
+  .kpis span { font-family: var(--f-display); font-variation-settings: 'wdth' 72; font-weight: 700; font-size: clamp(2.4rem, 4vw, 3.2rem); line-height: 1; color: var(--teal-bright); }
+  .rse ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; font-size: .94rem; color: var(--muted-dark); }
+  .rse li { display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 10px; }
+  .rse li :global(svg) { width: 18px; height: 18px; color: var(--teal-bright); margin-top: 3px; }
+  .labels { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding-top: 16px; border-top: 1px solid var(--line-dark); }
+  .labels > span:not(.tbc) { font: 500 .72rem/1 var(--f-mono); letter-spacing: .06em; border: 1px solid var(--line-dark-2); padding: 7px 9px; border-radius: 3px; }
+  .labels .opt { color: var(--muted-dark); }
+  @media (max-width: 960px) { .in { grid-template-columns: 1fr; } }
+  @media (max-width: 480px) { .ids div { grid-template-columns: 1fr; gap: 2px; } .kpis { grid-template-columns: 1fr; } }
+</style>

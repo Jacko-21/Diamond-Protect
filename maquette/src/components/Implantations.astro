@@ -1,0 +1,76 @@
+---
+import Confirm from './Confirm.astro';
+import Icon from './Icon.astro';
+import carte from '../data/carte-france.json';
+import { agences } from '../data/site';
+const villes = ['Paris et Île-de-France', 'Bobigny', 'Corbeil-Essonnes', 'Levallois-Perret', 'Troyes', 'Saint-Julien-les-Villas', 'Auxerre', 'Lyon', 'Bron', 'Francheville', 'Reims', 'Lille', 'Tours', 'Toulouse'];
+const pts = carte.cities as Record<string, [number, number]>;
+---
+<section class="section" id="implantations" aria-labelledby="imp-titre">
+  <div class="container in">
+    <div class="map-wrap">
+      <svg class="map" viewBox={`0 0 ${carte.w} ${carte.h}`} role="img" aria-label="Carte de France des implantations de Diamond Protect">
+        <g class="dots">
+          {carte.dots.map(([x, y]) => <circle cx={x} cy={y} r="2.1" />)}
+        </g>
+        {agences.map((a) => {
+          const [x, y] = pts[a.id];
+          return (
+            <g class={`site ${a.aConfirmer ? 'tbc-site' : ''} ${a.id === 'gennevilliers' ? 'hq' : ''}`} transform={`translate(${x} ${y})`}>
+              <circle class="ring" r="16" />
+              <rect class="mark" x="-6" y="-6" width="12" height="12" transform="rotate(45)" />
+              <text x="14" y="-12">{a.ville}</text>
+            </g>
+          );
+        })}
+      </svg>
+    </div>
+    <div class="copy">
+      <div class="section-head">
+        <p class="label">Implantations</p>
+        <h2 id="imp-titre">Ancrés en région, mobilisables partout en France.</h2>
+        <p class="muted">Des agences au plus près de vos sites et un réseau d'agents qui permet d'intervenir sur tout le territoire, renforts compris.</p>
+      </div>
+      <ul class="agences">
+        {agences.map((a) => (
+          <li>
+            <Icon name="pin" />
+            <div>
+              <p class="v">{a.ville} <span class="dept">({a.dept})</span> <span class="role">{a.role}</span></p>
+              {a.adresse ? <p class="a">{a.adresse}</p> : <p class="a"><Confirm texte="Adresse à confirmer" /></p>}
+            </div>
+          </li>
+        ))}
+      </ul>
+      <p class="note muted">Le site actuel annonce « 5 bureaux » pour 4 adresses publiées. <Confirm texte="Nombre d'agences à confirmer" /></p>
+      <p class="villes"><span class="label">Nous intervenons notamment à</span> {villes.join(' · ')}</p>
+    </div>
+  </div>
+</section>
+<style>
+  .in { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 6vw, 88px); align-items: center; }
+  .map-wrap { min-width: 0; }
+  .map { width: 100%; height: auto; overflow: visible; }
+  .dots circle { fill: rgba(157, 178, 184, .28); }
+  .site .ring { fill: rgba(60, 200, 193, .12); stroke: rgba(60, 200, 193, .5); stroke-width: 1; }
+  .site .mark { fill: var(--teal-bright); }
+  .site.hq .mark { fill: #ffffff; stroke: var(--teal-bright); stroke-width: 2; }
+  .site text { fill: var(--text-dark); font: 600 15px var(--f-body); paint-order: stroke; stroke: var(--night); stroke-width: 4px; }
+  .tbc-site .mark { fill: none; stroke: var(--amber); stroke-width: 2; stroke-dasharray: 3 2; }
+  .tbc-site .ring { stroke: var(--amber); fill: var(--amber-wash); stroke-dasharray: 3 3; }
+  @media (prefers-reduced-motion: no-preference) {
+    .site .ring { transform-origin: center; transform-box: fill-box; animation: pulse 2.8s ease-out infinite; }
+    @keyframes pulse { 0% { transform: scale(.6); opacity: 1; } 100% { transform: scale(1.5); opacity: 0; } }
+  }
+  .copy { min-width: 0; }
+  .agences { list-style: none; margin: 0 0 20px; padding: 0; border-top: 1px solid var(--line-dark-2); }
+  .agences li { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--line-dark); }
+  .agences li > :global(svg) { width: 20px; height: 20px; color: var(--teal-bright); margin-top: 2px; }
+  .v { font-weight: 650; font-size: 1.05rem; }
+  .dept { color: var(--muted-dark); font-weight: 400; }
+  .role { font: 500 .66rem/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--teal-bright); margin-left: 8px; }
+  .a { font-size: .9rem; color: var(--muted-dark); margin-top: 3px; }
+  .note { font-size: .88rem; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 20px; }
+  .villes { font-size: .88rem; color: var(--muted-dark); display: grid; gap: 8px; }
+  @media (max-width: 900px) { .in { grid-template-columns: 1fr; } .map-wrap { order: 2; max-width: 520px; } }
+</style>

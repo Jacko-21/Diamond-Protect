@@ -1,0 +1,42 @@
+---
+import Confirm from './Confirm.astro';
+import { societe, chiffres } from '../data/site';
+---
+<section class="preuves" aria-label="Conformité et chiffres clés">
+  <div class="container">
+    <ul class="band">
+      <li><span class="k">Autorisation d'exercice CNAPS</span><span class="v mono">{societe.cnaps}</span></li>
+      <li><span class="k">Cartes professionnelles</span><span class="v">Tous nos agents</span></li>
+      <li><span class="k">ISO 9001 · 14001 · 45001</span><span class="v"><Confirm texte="Certificats à fournir" /></span></li>
+      <li><span class="k">RC professionnelle</span><span class="v">Assurance à jour</span></li>
+      <li><span class="k">Tenues réglementaires</span><span class="v">Arrêté du 18 juillet 2023</span></li>
+    </ul>
+    <div class="stats">
+      {chiffres.map((c) => (
+        <div class="stat">
+          <p class="n num">{c.valeur}<span class={c.unite === '+' ? 'plus' : 'word'}>{c.unite}</span></p>
+          <p class="l">{c.libelle}</p>
+          <p class="d">{c.detail}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+<style>
+  .preuves { border-top: 1px solid var(--line-dark); background: var(--night-2); }
+  .band { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border-left: 1px solid var(--line-dark); }
+  .band li { padding: 22px 20px; border-right: 1px solid var(--line-dark); border-bottom: 1px solid var(--line-dark); display: grid; gap: 8px; align-content: start; min-width: 0; }
+  .k { font: 500 .7rem/1.3 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted-dark); }
+  .v { font-weight: 600; font-size: .98rem; overflow-wrap: anywhere; }
+  .v.mono { font-family: var(--f-mono); font-size: .8rem; font-weight: 500; color: var(--teal-bright); }
+  .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); padding-block: clamp(40px, 6vw, 72px); gap: 24px; }
+  .stat { display: grid; gap: 4px; padding-left: 20px; border-left: 1px solid var(--line-dark-2); }
+  .n { font-family: var(--f-display); font-variation-settings: 'wdth' 72; font-weight: 700; font-size: clamp(3rem, 6vw, 5rem); line-height: 1; letter-spacing: -0.02em; }
+  .n span { color: var(--teal-bright); }
+  .n .plus { font-size: .55em; margin-left: 4px; vertical-align: .55em; }
+  .n .word { font-size: .42em; margin-left: 8px; letter-spacing: 0; }
+  .l { font-weight: 600; font-size: 1.05rem; }
+  .d { font-size: .88rem; color: var(--muted-dark); }
+  @media (max-width: 1000px) { .band { grid-template-columns: repeat(2, minmax(0, 1fr)); } .band li:last-child { grid-column: 1 / -1; } }
+  @media (max-width: 760px) { .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 36px; } }
+</style>

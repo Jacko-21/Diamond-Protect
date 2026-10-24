@@ -1,0 +1,6 @@
+---
+// Marqueur « à confirmer » : signale une information que le client doit fournir.
+interface Props { texte?: string }
+const { texte = 'À confirmer' } = Astro.props;
+---
+<span class="tbc" title="Information à fournir ou à valider par Diamond Protect">{texte}</span>

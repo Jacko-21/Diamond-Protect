@@ -1,0 +1,167 @@
+/* Diamond Protect · maquette
+   Identité : bleu nuit de poste de commandement, turquoise du logo (#239995),
+   sections claires gris acier en alternance. Titres en linéale technique condensée,
+   étiquettes en chasse fixe façon rapport d'intervention. */
+
+:root {
+  /* couleurs */
+  --night: #0a1a22;
+  --night-2: #0e222c;
+  --night-3: #133039;
+  --line-dark: rgba(196, 232, 236, 0.12);
+  --line-dark-2: rgba(196, 232, 236, 0.22);
+  --teal: #239995;          /* turquoise du logo */
+  --teal-bright: #3cc8c1;   /* accent lisible sur fond nuit */
+  --teal-deep: #15706c;     /* accent lisible sur fond clair */
+  --teal-wash: rgba(35, 153, 149, 0.12);
+  --steel: #eef2f3;
+  --steel-2: #dfe6e8;
+  --white: #ffffff;
+  --ink: #0b1c24;
+  --text-dark: #e8f0f2;     /* texte sur fond nuit */
+  --muted-dark: #9db2b8;
+  --muted-light: #4c5f67;
+  --amber: #e2a23b;         /* « à confirmer » */
+  --amber-wash: rgba(226, 162, 59, 0.12);
+
+  /* typographie */
+  --f-display: 'Archivo', 'Arial Narrow', system-ui, sans-serif;
+  --f-body: 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --f-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  /* rythme */
+  --container: 1240px;
+  --gutter: clamp(16px, 4vw, 40px);
+  --section: clamp(72px, 9vw, 128px);
+  --r: 4px;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0;
+  background: var(--night);
+  color: var(--text-dark);
+  font-family: var(--f-body);
+  font-size: 17px;
+  line-height: 1.6;
+  font-variation-settings: 'wdth' 100;
+  -webkit-font-smoothing: antialiased;
+}
+img, svg { display: block; max-width: 100%; }
+figure { margin: 0; }
+a { color: inherit; }
+p { margin: 0; }
+h1, h2, h3, h4 {
+  margin: 0;
+  font-family: var(--f-display);
+  font-variation-settings: 'wdth' 80;
+  font-weight: 650;
+  line-height: 1.04;
+  letter-spacing: -0.012em;
+  text-wrap: balance;
+}
+h2 { font-size: clamp(2.1rem, 4.4vw, 3.6rem); }
+h3 { font-size: 1.45rem; line-height: 1.15; }
+:focus-visible { outline: 2px solid var(--teal-bright); outline-offset: 3px; }
+
+.container {
+  width: 100%;
+  max-width: calc(var(--container) + 2 * var(--gutter));
+  margin: 0 auto;
+  padding-left: max(var(--gutter), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--gutter), env(safe-area-inset-right, 0px));
+}
+.section { padding-block: var(--section); position: relative; }
+.light { background: var(--steel); color: var(--ink); color-scheme: light; }
+.light .muted { color: var(--muted-light); }
+.muted { color: var(--muted-dark); }
+
+/* étiquette en chasse fixe */
+.label {
+  font-family: var(--f-mono);
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--teal-bright);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.light .label { color: var(--teal-deep); }
+.label::before {
+  content: '';
+  width: 7px; height: 7px;
+  background: currentColor;
+  transform: rotate(45deg);
+  flex: none;
+}
+
+.section-head { display: grid; gap: 18px; max-width: 780px; margin-bottom: clamp(40px, 5vw, 64px); }
+.section-head p { font-size: 1.12rem; max-width: 62ch; }
+
+/* boutons */
+.btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  font: 600 0.98rem/1 var(--f-body);
+  text-decoration: none;
+  padding: 16px 22px;
+  border-radius: var(--r);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color .2s, color .2s, border-color .2s;
+}
+.btn svg { width: 16px; height: 16px; flex: none; }
+.btn-primary { background: var(--teal); color: var(--night); }
+.btn-primary:hover { background: var(--teal-bright); }
+.btn-ghost { border-color: var(--line-dark-2); color: var(--text-dark); }
+.btn-ghost:hover { border-color: var(--teal-bright); color: var(--teal-bright); }
+.light .btn-ghost { border-color: rgba(11, 28, 36, .25); color: var(--ink); }
+.light .btn-ghost:hover { border-color: var(--teal-deep); color: var(--teal-deep); }
+
+/* coins de viseur, façon écran de vidéosurveillance */
+.viewfinder { position: relative; }
+.viewfinder::after {
+  content: '';
+  position: absolute; inset: -1px;
+  pointer-events: none;
+  --c: var(--teal-bright); --l: 18px;
+  background:
+    linear-gradient(var(--c), var(--c)) top left / var(--l) 1.5px no-repeat,
+    linear-gradient(var(--c), var(--c)) top left / 1.5px var(--l) no-repeat,
+    linear-gradient(var(--c), var(--c)) top right / var(--l) 1.5px no-repeat,
+    linear-gradient(var(--c), var(--c)) top right / 1.5px var(--l) no-repeat,
+    linear-gradient(var(--c), var(--c)) bottom left / var(--l) 1.5px no-repeat,
+    linear-gradient(var(--c), var(--c)) bottom left / 1.5px var(--l) no-repeat,
+    linear-gradient(var(--c), var(--c)) bottom right / var(--l) 1.5px no-repeat,
+    linear-gradient(var(--c), var(--c)) bottom right / 1.5px var(--l) no-repeat;
+}
+.light .viewfinder::after { --c: var(--teal-deep); }
+
+/* marqueurs de maquette */
+.tbc {
+  display: inline-flex; align-items: center; gap: 6px;
+  font: 500 0.7rem/1.2 var(--f-mono);
+  letter-spacing: .06em; text-transform: uppercase;
+  color: var(--amber);
+  background: var(--amber-wash);
+  border: 1px dashed var(--amber);
+  border-radius: 3px;
+  padding: 4px 7px;
+  white-space: nowrap;
+}
+.light .tbc { color: #8a5a10; border-color: #b9821f; background: rgba(226, 162, 59, .16); }
+.photo-tag {
+  position: absolute; left: 12px; bottom: 12px; z-index: 2;
+  font: 500 0.66rem/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase;
+  color: var(--text-dark); background: rgba(10, 26, 34, .78);
+  border: 1px solid var(--line-dark-2); border-radius: 3px; padding: 6px 8px;
+}
+.photo { position: relative; overflow: hidden; background: var(--night-3); }
+.photo img { width: 100%; height: 100%; object-fit: cover; }
+
+.num { font-variant-numeric: tabular-nums; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

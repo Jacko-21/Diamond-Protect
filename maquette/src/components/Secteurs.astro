@@ -1,0 +1,45 @@
+---
+import { secteurs } from '../data/site';
+---
+<section class="section" id="secteurs" aria-labelledby="sec-titre">
+  <div class="container in">
+    <div class="side">
+      <div class="section-head">
+        <p class="label">Secteurs</p>
+        <h2 id="sec-titre">Chaque environnement a ses contraintes.</h2>
+        <p class="muted">Le plan de sûreté s'écrit avec votre réglementation, vos flux et votre image. Huit secteurs que nos équipes connaissent.</p>
+      </div>
+      <figure class="photo viewfinder" data-photo="provisoire">
+        <img src="img/protection-vip-hotel.jpg" alt="Deux agents en costume dans le hall d'un hôtel" loading="lazy" />
+        <span class="photo-tag">Visuel provisoire</span>
+      </figure>
+    </div>
+    <ol class="list">
+      {secteurs.map((s) => (
+        <li>
+          <span class="idx" aria-hidden="true"></span>
+          <div>
+            <h3>{s.nom}</h3>
+            <p class="muted">{s.contraintes}</p>
+          </div>
+          <span class="go" aria-hidden="true">→</span>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+<style>
+  .in { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: clamp(32px, 6vw, 96px); align-items: start; }
+  .side { position: sticky; top: 120px; display: grid; gap: 0; }
+  .side .photo { aspect-ratio: 16 / 10; border: 1px solid var(--line-dark-2); }
+  .side .photo img { filter: saturate(.7); }
+  .list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line-dark-2); }
+  .list li { display: grid; grid-template-columns: 14px minmax(0, 1fr) auto; gap: 16px; align-items: baseline; padding: 22px 4px; border-bottom: 1px solid var(--line-dark); transition: background-color .2s, padding .2s; cursor: default; }
+  .list li:hover { background: var(--night-2); padding-left: 14px; }
+  .idx { width: 8px; height: 8px; background: var(--teal-bright); transform: rotate(45deg) translateY(-3px); }
+  .list h3 { font-size: clamp(1.35rem, 2.2vw, 1.75rem); }
+  .list p { font-size: .94rem; margin-top: 6px; }
+  .go { color: var(--teal-bright); opacity: 0; transition: opacity .2s; }
+  .list li:hover .go { opacity: 1; }
+  @media (max-width: 900px) { .in { grid-template-columns: 1fr; } .side { position: static; } }
+</style>

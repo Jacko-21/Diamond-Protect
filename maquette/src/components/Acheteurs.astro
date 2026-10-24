@@ -1,0 +1,65 @@
+---
+import Icon from './Icon.astro';
+import Confirm from './Confirm.astro';
+import Diamant from './Diamant.astro';
+import { piecesAcheteurs } from '../data/site';
+const libelles: Record<string, string> = {
+  consultable: 'En ligne',
+  demande: 'Sur demande',
+  confirmer: 'À confirmer',
+  rediger: 'À rédiger',
+};
+---
+<section class="section acheteurs" id="acheteurs" aria-labelledby="ach-titre">
+  <Diamant class="ach-diamant" />
+  <div class="container in">
+    <div class="copy">
+      <p class="label">Espace acheteurs</p>
+      <h2 id="ach-titre">Vous préparez un appel d'offres ?</h2>
+      <p class="muted">Toutes les pièces dont vous avez besoin pour analyser notre candidature, réunies au même endroit. Les documents sensibles sont transmis sur demande. <Confirm texte="Délai de transmission à confirmer" /></p>
+      <div class="actions">
+        <a class="btn btn-primary" href="#contact">Ouvrir l'espace acheteurs <Icon name="arrow" /></a>
+        <a class="btn btn-ghost" href="#contact">Contact appels d'offres</a>
+      </div>
+      <p class="note">Interlocuteur dédié aux marchés publics et privés <Confirm /></p>
+    </div>
+    <div class="dossier viewfinder">
+      <div class="dossier-head">
+        <span>Dossier de candidature</span>
+        <span class="num">8 pièces</span>
+      </div>
+      <ul>
+        {piecesAcheteurs.map((p) => (
+          <li>
+            <Icon name="doc" />
+            <div class="txt"><p class="t">{p.piece}</p><p class="d">{p.detail}</p></div>
+            <span class={`st st-${p.statut}`}>{libelles[p.statut]}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
+<style>
+  .acheteurs { background: linear-gradient(160deg, var(--night-3), var(--night) 70%); border-top: 1px solid var(--line-dark); border-bottom: 1px solid var(--line-dark); overflow: hidden; }
+  :global(.ach-diamant) { position: absolute; width: min(620px, 70vw); left: -160px; bottom: -120px; opacity: .14; }
+  .in { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: clamp(32px, 6vw, 88px); align-items: center; }
+  .copy { display: grid; gap: 22px; }
+  .copy .muted { font-size: 1.1rem; }
+  .actions { display: flex; flex-wrap: wrap; gap: 12px; }
+  .note { font-size: .9rem; color: var(--muted-dark); display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .dossier { background: rgba(10, 26, 34, .82); border: 1px solid var(--line-dark-2); }
+  .dossier-head { display: flex; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid var(--line-dark-2); font: 500 .72rem/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--teal-bright); }
+  .dossier ul { list-style: none; margin: 0; padding: 0; }
+  .dossier li { display: grid; grid-template-columns: 20px minmax(0, 1fr) auto; gap: 14px; align-items: center; padding: 14px 20px; border-bottom: 1px solid var(--line-dark); }
+  .dossier li:last-child { border-bottom: 0; }
+  .dossier li > :global(svg) { width: 20px; height: 20px; color: var(--muted-dark); }
+  .t { font-weight: 600; font-size: .96rem; }
+  .d { font-size: .82rem; color: var(--muted-dark); overflow-wrap: anywhere; }
+  .st { font: 500 .66rem/1 var(--f-mono); letter-spacing: .07em; text-transform: uppercase; padding: 6px 8px; border-radius: 3px; white-space: nowrap; border: 1px solid; }
+  .st-consultable { color: var(--teal-bright); border-color: rgba(60, 200, 193, .45); background: var(--teal-wash); }
+  .st-demande { color: var(--text-dark); border-color: var(--line-dark-2); }
+  .st-confirmer, .st-rediger { color: var(--amber); border-color: var(--amber); border-style: dashed; background: var(--amber-wash); }
+  @media (max-width: 960px) { .in { grid-template-columns: 1fr; } }
+  @media (max-width: 480px) { .dossier li { grid-template-columns: minmax(0, 1fr) auto; } .dossier li > :global(svg) { display: none; } }
+</style>

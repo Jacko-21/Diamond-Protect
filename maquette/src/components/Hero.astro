@@ -1,0 +1,74 @@
+---
+import Icon from './Icon.astro';
+import Diamant from './Diamant.astro';
+---
+<section class="hero" id="top">
+  <div class="grid-bg" aria-hidden="true"></div>
+  <div class="container hero-in">
+    <div class="copy">
+      <p class="label">Sécurité privée · autorisée par le CNAPS</p>
+      <h1>Protéger.<br />Prévenir.<br /><span>Rassurer.</span></h1>
+      <p class="lead">Sécurité événementielle, gardiennage et sûreté de sites sensibles. 220 collaborateurs, un PC sécurité en astreinte 24h/24 et des implantations en Île-de-France, Bourgogne, Aube, Rhône et à Toulouse.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="#contact">Demander un devis <Icon name="arrow" /></a>
+        <a class="btn btn-ghost" href="#acheteurs"><Icon name="doc" /> Espace acheteurs</a>
+      </div>
+      <ul class="facts">
+        <li><Icon name="check" /> Devis sous 24 h ouvrées</li>
+        <li><Icon name="check" /> Astreinte 24h/24 · 7j/7</li>
+        <li><Icon name="check" /> Agents titulaires de la carte professionnelle</li>
+      </ul>
+    </div>
+    <div class="visual">
+      <Diamant class="hero-diamant" />
+      <figure class="photo viewfinder frame" data-photo="provisoire">
+        <img src="img/pc-securite.jpg" alt="Opérateurs devant un mur d'écrans de vidéosurveillance" width="1400" height="764" />
+        <span class="photo-tag">Visuel provisoire</span>
+        <figcaption class="hud">
+          <span class="rec"><i></i> PC sécurité · H24</span>
+          <span>Siège · Gennevilliers</span>
+          <span class="num">48.93° N · 2.29° E</span>
+        </figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+<style>
+  .hero { position: relative; overflow: hidden; padding-block: clamp(56px, 8vw, 112px) clamp(56px, 7vw, 96px); }
+  .grid-bg {
+    position: absolute; inset: 0; pointer-events: none;
+    background-image:
+      linear-gradient(var(--line-dark) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line-dark) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse 70% 80% at 70% 40%, #000 20%, transparent 75%);
+    opacity: .55;
+  }
+  .hero-in { position: relative; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 72px); align-items: center; }
+  .copy { display: grid; gap: 26px; min-width: 0; }
+  h1 { font-size: clamp(3.2rem, 8.4vw, 7rem); line-height: .92; font-variation-settings: 'wdth' 72; font-weight: 700; letter-spacing: -0.02em; }
+  h1 span { color: var(--teal-bright); }
+  .lead { font-size: clamp(1.05rem, 1.4vw, 1.2rem); color: var(--muted-dark); max-width: 54ch; }
+  .actions { display: flex; flex-wrap: wrap; gap: 12px; }
+  .facts { list-style: none; margin: 0; padding: 20px 0 0; border-top: 1px solid var(--line-dark); display: flex; flex-wrap: wrap; gap: 10px 26px; font-size: .9rem; color: var(--muted-dark); }
+  .facts li { display: inline-flex; gap: 8px; align-items: center; }
+  .facts :global(svg) { width: 16px; height: 16px; color: var(--teal-bright); }
+  .visual { position: relative; min-width: 0; }
+  .frame { aspect-ratio: 4 / 4.4; border: 1px solid var(--line-dark-2); }
+  .frame img { filter: saturate(.75) contrast(1.05); }
+  .frame::before { content: ''; position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(10,26,34,0) 45%, rgba(10,26,34,.85)); }
+  .hud { position: absolute; z-index: 2; top: 16px; left: 16px; right: 16px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; font: 500 .7rem/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--text-dark); }
+  .hud span { background: rgba(10, 26, 34, .72); border: 1px solid var(--line-dark-2); padding: 7px 9px; border-radius: 3px; }
+  .rec { display: inline-flex; align-items: center; gap: 7px; }
+  .rec i { width: 7px; height: 7px; border-radius: 50%; background: var(--teal-bright); box-shadow: 0 0 0 4px rgba(60, 200, 193, .2); }
+  :global(.hero-diamant) { position: absolute; z-index: 3; width: 62%; right: -14%; bottom: -10%; opacity: .9; filter: drop-shadow(0 0 18px rgba(60, 200, 193, .25)); }
+  @media (prefers-reduced-motion: no-preference) {
+    .rec i { animation: blink 1.6s steps(2, start) infinite; }
+    @keyframes blink { to { opacity: .25; } }
+  }
+  @media (max-width: 900px) {
+    .hero-in { grid-template-columns: 1fr; }
+    .frame { aspect-ratio: 16 / 11; }
+    :global(.hero-diamant) { width: 46%; right: -6%; bottom: -14%; }
+  }
+</style>
