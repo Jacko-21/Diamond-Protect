@@ -1,0 +1,575 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Diamond Protect · Sécurité privée et sûreté</title>
+  <meta name="description" content="Gardiennage, sécurité événementielle, sûreté et sécurité incendie. Entreprise titulaire d'une autorisation d'exercice CNAPS. Maquette.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..500;1,9..144,300..400&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script>document.documentElement.classList.add('js')</script>
+</head>
+<body>
+
+<div class="loader" id="loader" aria-hidden="true">
+  <div class="loader__glow"></div>
+  <svg class="loader__gem" viewBox="0 0 120 100">
+    <defs>
+      <clipPath id="gemclip"><path d="M20 30 40 10h40l20 20-40 62z"/></clipPath>
+      <linearGradient id="gemsheen" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".6"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    </defs>
+    <path class="gem-fill" d="M20 30 40 10h40l20 20-40 62z"/>
+    <path pathLength="1" d="M20 30 40 10h40l20 20-40 62z"/>
+    <path pathLength="1" d="M20 30h80"/>
+    <path pathLength="1" d="M40 10l10 20 10-20 10 20 10-20"/>
+    <path pathLength="1" d="M50 30l10 62 10-62"/>
+    <path pathLength="1" d="M33 30l27 62 27-62"/>
+    <g clip-path="url(#gemclip)"><rect class="gem-sheen" x="-40" y="-10" width="36" height="120" fill="url(#gemsheen)"/></g>
+  </svg>
+  <img class="loader__logo" src="assets/logo-blanc.svg" alt="" width="311" height="103">
+  <div class="loader__foot">
+    <span class="loader__hallmark"><span>Autorisation d'exercice CNAPS&nbsp;</span><b data-type="AUT-095-2123-12-11-20240944324"></b></span>
+    <span class="loader__pct" data-pct>000</span>
+  </div>
+  <div class="loader__bar"><i></i></div>
+</div>
+<script>
+  // Écran de chargement : le poinçon se grave pendant que la page charge. ?noloader pour le passer.
+  (() => {
+    const L = document.getElementById('loader');
+    const root = document.documentElement;
+    if (new URLSearchParams(location.search).has('noloader') || matchMedia('(prefers-reduced-motion: reduce)').matches) { L.remove(); return; }
+    root.classList.add('is-loading');
+    const num = L.querySelector('[data-type]'), pct = L.querySelector('[data-pct]'), bar = L.querySelector('.loader__bar i');
+    const code = num.dataset.type, t0 = performance.now(), MIN = 2100;
+    let loaded = document.readyState === 'complete', finished = false;
+    addEventListener('load', () => { loaded = true; });
+    setTimeout(() => { loaded = true; }, 6000);
+    const done = () => {
+      if (finished) return; finished = true;
+      pct.textContent = '100'; bar.style.transform = 'scaleX(1)'; num.textContent = code;
+      setTimeout(() => {
+        L.classList.add('is-done');
+        root.classList.remove('is-loading');
+        setTimeout(() => L.remove(), 1300);
+      }, 420);
+    };
+    const frame = now => {
+      if (finished) return;
+      const t = Math.min((now - t0) / MIN, 1);
+      const p = loaded ? t * 100 : Math.min(t * 100, 92);
+      num.textContent = code.slice(0, Math.round(code.length * Math.min(t * 1.3, 1)));
+      pct.textContent = String(Math.floor(p)).padStart(3, '0');
+      bar.style.transform = 'scaleX(' + (p / 100) + ')';
+      p >= 100 ? done() : requestAnimationFrame(frame);
+    };
+    requestAnimationFrame(frame);
+    L.addEventListener('click', done);
+  })();
+</script>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 8h11M9 4l4 4-4 4"/></symbol>
+  <symbol id="i-mark" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M9 1.5 16.5 7 9 16.5 1.5 7z"/><path d="M1.5 7h15M6 7l3 9.5L12 7M5 2.8 6 7l3-5.5L12 7l1-4.2"/></symbol>
+  <symbol id="i-check" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 6.3 4.8 9 10 3"/></symbol>
+  <symbol id="i-wait" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="6" cy="6" r="4.6"/><path d="M6 3.4V6l1.8 1.2"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 6h14M2 12h14"/></symbol>
+</svg>
+
+<div class="topbar">
+  <div class="wrap">
+    <a class="astreinte" href="tel:+33605827182"><i aria-hidden="true"></i><span>Astreinte 24h/24, 7j/7 ·</span> <b class="mono">06 05 82 71 82</b></a>
+    <nav class="topbar__links" aria-label="Accès rapides">
+      <a href="#">Recrutement</a>
+      <a href="#">Actualités et veille CNAPS</a>
+      <a href="#">Être rappelé</a>
+    </nav>
+  </div>
+</div>
+
+<header class="header">
+  <div class="wrap">
+    <a class="logo" href="#" aria-label="Diamond Protect, accueil"><img src="assets/logo-blanc.svg" alt="Diamond Protect" width="311" height="103"></a>
+    <nav class="nav" aria-label="Navigation principale">
+      <a href="#expertises">Expertises</a>
+      <a href="#secteurs">Secteurs</a>
+      <a href="#references">Références</a>
+      <a href="#registre" data-key>Espace acheteurs</a>
+      <a href="#implantations">Le groupe</a>
+    </nav>
+    <a class="btn btn--gold" href="#devis">Demander un devis</a>
+    <button class="burger" type="button" aria-label="Ouvrir le menu"><svg width="18" height="18"><use href="#i-menu"/></svg></button>
+  </div>
+</header>
+
+<main>
+
+  <!-- ———— Promesse ———— -->
+  <section class="hero" aria-labelledby="h-hero">
+    <div class="hero__photo">
+      <img src="img/hero-oreillette.jpg" alt="" data-photo="provisoire" fetchpriority="high">
+    </div>
+    <div class="hero__sheen" aria-hidden="true"></div>
+
+    <div class="wrap hero__content">
+      <h1 id="h-hero" class="display">La sûreté, <em>taillée</em> sur&nbsp;mesure.</h1>
+
+      <div class="hero__sub">
+        <p>Gardiennage, sécurité événementielle, sûreté et sécurité incendie pour les sites et les événements qui n'admettent aucune approximation. 220+ collaborateurs titulaires de la carte professionnelle, une astreinte 24h/24.</p>
+        <div class="hero__ctas">
+          <a class="btn btn--line" href="#registre">Ouvrir l'Espace acheteurs <svg><use href="#i-arrow"/></svg></a>
+        </div>
+      </div>
+
+      <div class="poincon" role="group" aria-label="Autorisation d'exercice">
+        <span class="poincon__mark"><svg><use href="#i-mark"/></svg> Autorisée par le CNAPS</span>
+        <span>N°&nbsp;<b class="poincon__num">AUT-095-2123-12-11-20240944324</b></span>
+        <span class="poincon__legal">L'autorisation d'exercice ne confère aucune prérogative de puissance publique à l'entreprise ou aux personnes qui en bénéficient.</span>
+        <a href="https://www.cnaps.interieur.gouv.fr/" rel="noopener" target="_blank">Vérifier ↗</a>
+      </div>
+
+      <form class="quote" id="devis-rapide" aria-label="Demande de devis rapide">
+        <label>
+          <span>Votre besoin</span>
+          <select name="metier" required>
+            <option value="" selected disabled>Choisir une expertise</option>
+            <option>Sécurité événementielle</option>
+            <option>Gardiennage et contrôle d'accès</option>
+            <option>Sûreté et Task Force</option>
+            <option>Gardiennage cynophile</option>
+            <option>Sécurité incendie (SSIAP)</option>
+            <option>Intervention mobile</option>
+            <option>Accueil et filtrage</option>
+          </select>
+        </label>
+        <label>
+          <span>Lieu du site ou de l'événement</span>
+          <input name="lieu" type="text" placeholder="Ville ou code postal" autocomplete="address-level2">
+        </label>
+        <label>
+          <span>Début souhaité</span>
+          <input name="date" type="date">
+        </label>
+        <button class="btn btn--gold" type="submit">Demander un devis <svg><use href="#i-arrow"/></svg></button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ———— Registre des garanties ———— -->
+  <section class="section registre" id="registre" aria-labelledby="h-registre">
+    <div class="wrap">
+      <div class="registre__head" data-reveal>
+        <h2 id="h-registre" class="display h2">Chaque engagement, <em>poinçonné</em>.</h2>
+        <p class="lede">Ce que nous affirmons, et la pièce qui le prouve. Le dossier complet, attestations et certificats compris, se consulte dans l'Espace acheteurs, avec un interlocuteur dédié aux appels d'offres.</p>
+      </div>
+
+      <table class="ledger" data-reveal>
+        <caption class="sr-only">Registre des garanties de Diamond Protect</caption>
+        <thead>
+          <tr><th scope="col">Valeur</th><th scope="col">Engagement</th><th scope="col">Preuve</th><th scope="col">Statut</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="val">CNAPS</td>
+            <td class="what">Autorisation d'exercice d'une activité privée de sécurité</td>
+            <td class="proof">N° AUT-095-2123-12-11-20240944324</td>
+            <td class="status"><span class="stamp"><svg><use href="#i-check"/></svg>Vérifiable</span></td>
+          </tr>
+          <tr>
+            <td class="val">20<small>ans</small></td>
+            <td class="what">d'expérience, héritée de Pack Sécurité</td>
+            <td class="proof">Fondée en 2005, absorbée par Diamond Protect en 2025</td>
+            <td class="status"><span class="stamp"><svg><use href="#i-check"/></svg>Publié</span></td>
+          </tr>
+          <tr>
+            <td class="val">220<small>+</small></td>
+            <td class="what">collaborateurs, agents titulaires de la carte professionnelle</td>
+            <td class="proof">Registre du personnel <span class="tbc">[À CONFIRMER]</span></td>
+            <td class="status"><span class="stamp"><svg><use href="#i-check"/></svg>Publié</span></td>
+          </tr>
+          <tr>
+            <td class="val">1000<small>+</small></td>
+            <td class="what">sites et événements sécurisés, pour 100+ clients actifs</td>
+            <td class="proof">Références par secteur dans l'Espace acheteurs</td>
+            <td class="status"><span class="stamp"><svg><use href="#i-check"/></svg>Publié</span></td>
+          </tr>
+          <tr>
+            <td class="val">24/7</td>
+            <td class="what">PC sécurité, numéro d'appel unique et astreinte</td>
+            <td class="proof">06 05 82 71 82 · ligne fixe <span class="tbc">[À CONFIRMER]</span></td>
+            <td class="status"><span class="stamp"><svg><use href="#i-check"/></svg>Publié</span></td>
+          </tr>
+          <tr>
+            <td class="val">ISO</td>
+            <td class="what">9001, 14001, 45001 : qualité, environnement, santé et sécurité au travail</td>
+            <td class="proof">Organisme, numéro et validité <span class="tbc">[À CONFIRMER]</span></td>
+            <td class="status"><span class="stamp stamp--wait"><svg><use href="#i-wait"/></svg>À confirmer</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </section>
+
+  <!-- ———— Références clients (section claire) ———— -->
+  <section class="section light clients" id="references" aria-labelledby="h-clients">
+    <div class="wrap">
+      <div class="clients__head" data-reveal>
+        <h2 id="h-clients" class="display h2">Ils nous ont fait <em>confiance</em>.</h2>
+        <p class="lede">Collectivités, enseignes nationales, industriels et grandes marques : 24 références publiées, que l'Espace acheteurs détaille secteur par secteur.</p>
+      </div>
+
+      <div class="clients__filters" role="group" aria-label="Filtrer les références par secteur">
+          <button type="button" class="chip is-on" data-filter="all" aria-pressed="true">Toutes <span>24</span></button>
+          <button type="button" class="chip" data-filter="public" aria-pressed="false">Collectivités et enseignement <span>8</span></button>
+          <button type="button" class="chip" data-filter="retail" aria-pressed="false">Distribution <span>5</span></button>
+          <button type="button" class="chip" data-filter="industrie" aria-pressed="false">Industrie, énergie et transport <span>5</span></button>
+          <button type="button" class="chip" data-filter="marques" aria-pressed="false">Culture, sport et marques <span>6</span></button>
+      </div>
+
+      <ul class="clients__grid" data-clients data-reveal>
+          <li data-sector="industrie"><img src="assets/clients/sncf.png" alt="SNCF" loading="lazy"><span><b>SNCF</b>Industrie, énergie et transport</span></li>
+          <li data-sector="marques"><img src="assets/clients/jean-paul-gaultier.png" alt="Jean Paul Gaultier" loading="lazy"><span><b>Jean Paul Gaultier</b>Culture, sport et marques</span></li>
+          <li data-sector="public"><img src="assets/clients/grand-nancy.png" alt="Métropole du Grand Nancy" loading="lazy"><span><b>Métropole du Grand Nancy</b>Collectivités et enseignement</span></li>
+          <li data-sector="retail"><img src="assets/clients/leclerc.png" alt="E.Leclerc" loading="lazy"><span><b>E.Leclerc</b>Distribution</span></li>
+          <li data-sector="industrie"><img src="assets/clients/rte.png" alt="RTE" loading="lazy"><span><b>RTE</b>Industrie, énergie et transport</span></li>
+          <li data-sector="marques"><img src="assets/clients/coca-cola.png" alt="Coca-Cola" loading="lazy"><span><b>Coca-Cola</b>Culture, sport et marques</span></li>
+          <li data-sector="public"><img src="assets/clients/yonne.png" alt="Département de l'Yonne" loading="lazy"><span><b>Département de l'Yonne</b>Collectivités et enseignement</span></li>
+          <li data-sector="industrie"><img src="assets/clients/eiffage.png" alt="Eiffage" loading="lazy"><span><b>Eiffage</b>Industrie, énergie et transport</span></li>
+          <li data-sector="marques"><img src="assets/clients/croix-rouge.png" alt="Croix-Rouge française" loading="lazy"><span><b>Croix-Rouge française</b>Culture, sport et marques</span></li>
+          <li data-sector="public"><img src="assets/clients/universite-bourgogne.png" alt="Université de Bourgogne" loading="lazy"><span><b>Université de Bourgogne</b>Collectivités et enseignement</span></li>
+          <li data-sector="retail"><img src="assets/clients/lidl.png" alt="Lidl" loading="lazy"><span><b>Lidl</b>Distribution</span></li>
+          <li data-sector="industrie"><img src="assets/clients/knauf.png" alt="Knauf" loading="lazy"><span><b>Knauf</b>Industrie, énergie et transport</span></li>
+          <li data-sector="marques"><img src="assets/clients/cgr.png" alt="CGR Cinémas" loading="lazy"><span><b>CGR Cinémas</b>Culture, sport et marques</span></li>
+          <li data-sector="public"><img src="assets/clients/troyes.png" alt="Ville de Troyes" loading="lazy"><span><b>Ville de Troyes</b>Collectivités et enseignement</span></li>
+          <li data-sector="retail"><img src="assets/clients/intermarche.png" alt="Intermarché" loading="lazy"><span><b>Intermarché</b>Distribution</span></li>
+          <li data-sector="industrie"><img src="assets/clients/primagaz.png" alt="Primagaz" loading="lazy"><span><b>Primagaz</b>Industrie, énergie et transport</span></li>
+          <li data-sector="marques"><img src="assets/clients/europ-assistance.png" alt="Europ Assistance" loading="lazy"><span><b>Europ Assistance</b>Culture, sport et marques</span></li>
+          <li data-sector="public"><img src="assets/clients/auxerre.png" alt="Ville d'Auxerre" loading="lazy"><span><b>Ville d'Auxerre</b>Collectivités et enseignement</span></li>
+          <li data-sector="retail"><img src="assets/clients/grand-frais.png" alt="Grand Frais" loading="lazy"><span><b>Grand Frais</b>Distribution</span></li>
+          <li data-sector="marques"><img src="assets/clients/aj-auxerre.png" alt="AJ Auxerre" loading="lazy"><span><b>AJ Auxerre</b>Culture, sport et marques</span></li>
+          <li data-sector="public"><img src="assets/clients/assurance-maladie.png" alt="Assurance Maladie" loading="lazy"><span><b>Assurance Maladie</b>Collectivités et enseignement</span></li>
+          <li data-sector="retail"><img src="assets/clients/mondial-tissus.png" alt="Mondial Tissus" loading="lazy"><span><b>Mondial Tissus</b>Distribution</span></li>
+          <li data-sector="public"><img src="assets/clients/bron.png" alt="Ville de Bron" loading="lazy"><span><b>Ville de Bron</b>Collectivités et enseignement</span></li>
+          <li data-sector="public"><img src="assets/clients/utt.png" alt="Université de technologie de Troyes" loading="lazy"><span><b>Université de technologie de Troyes</b>Collectivités et enseignement</span></li>
+      </ul>
+
+      <p class="clients__note">Logos repris du site actuel. Accord d'affichage de chaque client <span class="tbc">[À CONFIRMER]</span> · Études de cas en préparation.</p>
+    </div>
+  </section>
+
+  <!-- ———— Vitrine des métiers ———— -->
+  <section class="section vitrine" id="expertises" aria-labelledby="h-expertises">
+    <div class="wrap">
+      <div class="vitrine__head" data-reveal>
+        <h2 id="h-expertises" class="display h2">Sept expertises,<br>une seule <em>exigence</em>.</h2>
+        <a class="btn btn--line" href="#">Toutes les expertises <svg><use href="#i-arrow"/></svg></a>
+      </div>
+
+      <div class="vitrine__grid">
+        <ul class="metiers" data-metiers>
+          <li class="metier is-on" data-img="0"><a href="#">
+            <span class="metier__name">Sécurité événementielle</span>
+            <span class="metier__arrow"><svg><use href="#i-arrow"/></svg></span>
+            <span class="metier__desc">Filtrage des entrées, gestion des flux, PC sécurité et chef de dispositif pour les salons, galas, concerts et rencontres sportives.</span>
+          </a></li>
+          <li class="metier" data-img="1"><a href="#">
+            <span class="metier__name">Gardiennage et contrôle d'accès</span>
+            <span class="metier__arrow"><svg><use href="#i-arrow"/></svg></span>
+            <span class="metier__desc">Agents en poste fixe, rondes, contrôle des badges et des visiteurs, consignés dans une main courante électronique.</span>
+          </a></li>
+          <li class="metier" data-img="2"><a href="#">
+            <span class="metier__name">Sûreté et Task Force</span>
+            <span class="metier__arrow"><svg><use href="#i-arrow"/></svg></span>
+            <span class="metier__desc">Analyse de risques et dispositifs renforcés pour les sites sensibles et stratégiques.</span>
+          </a></li>
+          <li class="metier" data-img="3"><a href="#">
+            <span class="metier__name">Gardiennage cynophile</span>
+            <span class="metier__arrow"><svg><use href="#i-arrow"/></svg></span>
+            <span class="metier__desc">Binômes maître-chien. Chiens identifiés, assurés et suivis par un vétérinaire.</span>
+          </a></li>
+          <li class="metier" data-img="4"><a href="#">
+            <span class="metier__name">Sécurité incendie</span>
+            <span class="metier__arrow"><svg><use href="#i-arrow"/></svg></span>
+            <span class="metier__desc">Agents SSIAP 1, 2 et 3, recyclages suivis dans notre plan de formation.</span>
+          </a></li>
+          <li class="metier" data-img="5"><a href="#">
+            <span class="metier__name">Intervention mobile</span>
+            <span class="metier__arrow"><svg><use href="#i-arrow"/></svg></span>
+            <span class="metier__desc">Véhicules géolocalisés et main courante électronique, levées de doute et rondes 24h/24.</span>
+          </a></li>
+          <li class="metier" data-img="6"><a href="#">
+            <span class="metier__name">Accueil et filtrage</span>
+            <span class="metier__arrow"><svg><use href="#i-arrow"/></svg></span>
+            <span class="metier__desc">Accueil des visiteurs et des collaborateurs, contrôle courtois des accès, tenue irréprochable.</span>
+          </a></li>
+        </ul>
+
+        <figure class="niche" aria-hidden="true">
+          <img class="is-on" src="img/evenementiel.jpg" alt="" data-photo="provisoire" loading="lazy">
+          <img src="img/gardiennage.jpg" alt="" data-photo="provisoire" loading="lazy">
+          <img src="img/surete.jpg" alt="" data-photo="provisoire" loading="lazy">
+          <img src="img/ronde.jpg" alt="" data-photo="provisoire" loading="lazy">
+          <img src="img/incendie.jpg" alt="" data-photo="provisoire" loading="lazy">
+          <img src="img/intervention.jpg" alt="" data-photo="provisoire" loading="lazy">
+          <img src="img/accueil.jpg" alt="" data-photo="provisoire" loading="lazy">
+          <figcaption><span data-niche-label>Sécurité événementielle</span><span>Photo provisoire</span></figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ———— Secteurs (section claire) ———— -->
+  <section class="section light" id="secteurs" aria-labelledby="h-secteurs">
+    <div class="wrap">
+      <div class="secteurs__head" data-reveal>
+        <h2 id="h-secteurs" class="display h2">Un dispositif pensé pour <em>votre</em> secteur.</h2>
+        <p class="lede">Les contraintes d'une galerie marchande ne sont pas celles d'un gala ou d'un site industriel. Chaque secteur a sa page, ses références et son interlocuteur.</p>
+      </div>
+
+      <div class="secteurs__grid" data-reveal>
+        <a class="secteur secteur--photo" href="#">
+          <img src="img/luxe.jpg" alt="" data-photo="provisoire" loading="lazy">
+          <div class="in">
+            <h3>Luxe et retail</h3>
+            <p>Boutiques, maisons et galeries marchandes : une présence discrète, une tenue impeccable, un accueil à la hauteur de la marque.</p>
+            <span class="go" style="margin-top:1rem">Découvrir <svg width="14" height="14"><use href="#i-arrow"/></svg></span>
+          </div>
+        </a>
+        <a class="secteur" href="#"><h3>Événementiel, culture et sport</h3><span class="go">Découvrir <svg width="14" height="14"><use href="#i-arrow"/></svg></span></a>
+        <a class="secteur" href="#"><h3>Hôtellerie et restauration</h3><span class="go">Découvrir <svg width="14" height="14"><use href="#i-arrow"/></svg></span></a>
+        <a class="secteur" href="#"><h3>Collectivités et établissements publics</h3><span class="go">Découvrir <svg width="14" height="14"><use href="#i-arrow"/></svg></span></a>
+        <a class="secteur" href="#"><h3>Industrie, énergie et logistique</h3><span class="go">Découvrir <svg width="14" height="14"><use href="#i-arrow"/></svg></span></a>
+        <a class="secteur" href="#" style="grid-column: span 6"><h3>Bureaux, immobilier et copropriétés</h3><p>Sièges sociaux, immeubles tertiaires et résidences : contrôle d'accès, rondes et accueil.</p></a>
+        <a class="secteur" href="#" style="grid-column: span 6"><h3>Chantiers et sites sensibles</h3><p>Gardiennage de chantiers BTP et protection des sites stratégiques, de jour comme de nuit.</p></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ———— Méthode ———— -->
+  <section class="section methode" aria-labelledby="h-methode">
+    <div class="wrap methode__grid">
+      <div class="methode__aside" data-reveal>
+        <h2 id="h-methode" class="display h2">Une méthode, de l'analyse au <em>contrôle</em>.</h2>
+        <p class="lede" style="margin-top:1.5rem">Chaque mission suit le même fil, que le dispositif compte deux agents ou deux cents.</p>
+        <div class="methode__photo"><img src="img/pc-securite.jpg" alt="" data-photo="provisoire" loading="lazy"></div>
+      </div>
+
+      <ol class="steps">
+        <li class="step" data-reveal>
+          <div>
+            <h3>Analyse de risques préalable</h3>
+            <p>Visite du site, lecture du cahier des charges et analyse des risques avant toute proposition chiffrée.</p>
+          </div>
+        </li>
+        <li class="step" data-reveal>
+          <div>
+            <h3>Des responsables nommés</h3>
+            <p>Un responsable d'exploitation et un chef de dispositif pour chaque mission, joignables directement.</p>
+            <ul><li>Responsable d'exploitation</li><li>Chef de dispositif</li></ul>
+          </div>
+        </li>
+        <li class="step" data-reveal>
+          <div>
+            <h3>Un PC sécurité joignable à toute heure</h3>
+            <p>Numéro d'appel unique, astreinte 24h/24 et main courante électronique partagée avec le client.</p>
+            <ul><li>Astreinte H24</li><li>Main courante électronique</li></ul>
+          </div>
+        </li>
+        <li class="step" data-reveal>
+          <div>
+            <h3>Des contrôles et des indicateurs</h3>
+            <p>Contrôles de prestation de niveaux 1 et 2 et indicateurs qualité suivis dans un plan d'assurance qualité.</p>
+            <ul><li>Contrôles N1 et N2</li><li>PAQ</li></ul>
+          </div>
+        </li>
+        <li class="step" data-reveal>
+          <div>
+            <h3>Des agents formés et équipés</h3>
+            <p>Plan de formation, recyclages SSIAP et MAC APS. Tenue conforme à l'arrêté du 18 juillet 2023, badge nominatif et carte professionnelle visible.</p>
+            <ul><li>SSIAP</li><li>MAC APS</li><li>EN ISO 20345</li><li>EN ISO 20471</li></ul>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ———— Étude de cas (format, en attente d'accord client) ———— -->
+  <section class="section cas" id="cas" aria-labelledby="h-cas">
+    <div class="cas__bg"><img src="img/methode.jpg" alt="" data-photo="provisoire" loading="lazy"></div>
+    <div class="wrap cas__grid">
+      <div data-reveal>
+        <h2 id="h-cas" class="display h2">Un site, un dispositif, <em>un résultat</em>.</h2>
+        <p class="lede" style="margin-top:1.5rem">Nos études de cas seront publiées avec l'accord écrit de chaque client. Voici le format retenu.</p>
+        <blockquote>« Citation du client sur la qualité du dispositif. » <span class="tbc">[À CONFIRMER]</span></blockquote>
+      </div>
+      <dl class="cas__facts" data-reveal>
+        <div><dt>Client</dt><dd><span class="tbc">[À CONFIRMER]</span></dd></div>
+        <div><dt>Secteur</dt><dd><span class="tbc">[À CONFIRMER]</span></dd></div>
+        <div><dt>Contexte</dt><dd>Enjeux du site, contraintes, calendrier</dd></div>
+        <div><dt>Dispositif</dt><dd>Effectifs, qualifications, équipements</dd></div>
+        <div><dt>Résultat chiffré</dt><dd><span class="tbc">[À CONFIRMER]</span></dd></div>
+        <div><dt>Durée</dt><dd><span class="tbc">[À CONFIRMER]</span></dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ———— Implantations (section claire) ———— -->
+  <section class="section light implant" id="implantations" aria-labelledby="h-implant">
+    <div class="wrap implant__grid">
+      <div data-reveal>
+        <h2 id="h-implant" class="display h2">Présents là où <em>vous</em> opérez.</h2>
+        <p class="lede" style="margin-top:1.5rem">Un siège en Île-de-France et des agences en régions. Chaque agence aura sa page, son équipe et ses coordonnées.</p>
+        <ul class="agences">
+          <li class="agence"><b>Gennevilliers</b><span>17 avenue des Louvresses, 92230 Gennevilliers<i class="tag">Siège</i></span></li>
+          <li class="agence"><b>Lyon</b><span>59 chemin du Moulin Carron, 69570 Dardilly</span></li>
+          <li class="agence"><b>Auxerre</b><span>105 rue des Mignottes, 89000 Auxerre</span></li>
+          <li class="agence"><b>Troyes</b><span>8 avenue du Président Coty, 10600 La Chapelle-Saint-Luc</span></li>
+          <li class="agence"><b>Toulouse</b><span>Adresse <span class="tbc">[À CONFIRMER]</span></span></li>
+        </ul>
+      </div>
+
+      <figure class="carte" data-reveal>
+        <svg viewBox="140 -40 360 580" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Carte des implantations : Gennevilliers, Troyes, Auxerre, Lyon, Toulouse">
+          <defs>
+            <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" fill="none" stroke="rgba(236,239,244,.05)" stroke-width=".6"/></pattern>
+            <radialGradient id="glow"><stop offset="0" stop-color="#e6c074" stop-opacity=".55"/><stop offset="1" stop-color="#e6c074" stop-opacity="0"/></radialGradient>
+          </defs>
+          <rect x="140" y="-40" width="360" height="520" fill="url(#grid)"/>
+          <g stroke="#d4a955" stroke-width=".7" stroke-opacity=".55" fill="none">
+            <path d="M299.6 132.9 371.5 170.8M299.6 132.9 352.2 202M299.6 132.9 400.7 323.9M299.6 132.9 264.7 459.2M371.5 170.8 352.2 202M352.2 202 400.7 323.9"/>
+          </g>
+          <g stroke="#aab6c4" stroke-width=".6" stroke-dasharray="2 3" stroke-opacity=".5" fill="none">
+            <path d="M299.6 132.9 330.4 28.8M299.6 132.9 371.1 112.7M299.6 132.9 233.8 227.1"/>
+          </g>
+          <circle cx="299.6" cy="132.9" r="26" fill="url(#glow)"/>
+          <g fill="#e6c074">
+            <circle cx="299.6" cy="132.9" r="4.5"/>
+            <circle cx="371.5" cy="170.8" r="3"/><circle cx="352.2" cy="202" r="3"/><circle cx="400.7" cy="323.9" r="3"/><circle cx="264.7" cy="459.2" r="3"/>
+          </g>
+          <g fill="none" stroke="#aab6c4" stroke-width=".9"><circle cx="330.4" cy="28.8" r="2.6"/><circle cx="371.1" cy="112.7" r="2.6"/><circle cx="233.8" cy="227.1" r="2.6"/></g>
+          <g font-family="JetBrains Mono, monospace" font-size="11" fill="#eceff4" letter-spacing=".5">
+            <text x="286" y="122" text-anchor="end">GENNEVILLIERS</text>
+            <text x="380" y="168">TROYES</text>
+            <text x="361" y="210">AUXERRE</text>
+            <text x="409" y="327">LYON</text>
+            <text x="274" y="463">TOULOUSE</text>
+          </g>
+          <g font-family="JetBrains Mono, monospace" font-size="10" fill="#aab6c4" letter-spacing=".5">
+            <text x="339" y="31">LILLE ?</text><text x="380" y="114">REIMS ?</text><text x="224" y="230" text-anchor="end">TOURS ?</text>
+          </g>
+        </svg>
+        <figcaption>Points pleins : adresses publiées. Points creux : villes de la carte actuelle, à confirmer.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ———— Deux portes : client / candidat ———— -->
+  <section class="portes" id="devis" aria-label="Contact et recrutement">
+    <div class="porte porte--devis">
+      <img src="img/facettes.jpg" alt="" data-photo="provisoire" loading="lazy" style="opacity:.55">
+      <h2 class="display">Parlons de votre <em>site</em>.</h2>
+      <p>Un interlocuteur étudie votre cahier des charges, visite le site si besoin et vous remet une proposition chiffrée. Délai de réponse <span class="tbc">[À CONFIRMER]</span></p>
+      <div class="actions">
+        <a class="btn btn--gold" href="#devis-rapide">Demander un devis <svg><use href="#i-arrow"/></svg></a>
+        <a class="btn btn--line" href="#">Être rappelé</a>
+      </div>
+      <a class="tel" href="tel:+33605827182">06 05 82 71 82<small>Astreinte 24h/24, 7j/7 · contact@diamond-protect.fr</small></a>
+    </div>
+    <div class="porte">
+      <img src="img/cynophile.jpg" alt="" data-photo="provisoire" loading="lazy">
+      <h2 class="display">Rejoindre <em>Diamond Protect</em>.</h2>
+      <p>Agents de sécurité, agents SSIAP, maîtres-chiens, chefs de poste : un parcours dédié aux candidats, séparé des demandes clients. Postes ouverts <span class="tbc">[À CONFIRMER]</span></p>
+      <div class="actions"><a class="btn btn--line" href="#">Voir les offres <svg><use href="#i-arrow"/></svg></a></div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__grid">
+      <div>
+        <img src="assets/logo-blanc.svg" alt="Diamond Protect" width="140" height="46" style="width:140px;height:auto;margin-bottom:1.25rem">
+        <p style="margin:0;max-width:34ch">Sécurité privée et sûreté. Filiale du groupe Alfaventure.</p>
+      </div>
+      <div>
+        <h4>Expertises</h4>
+        <ul><li><a href="#">Sécurité événementielle</a></li><li><a href="#">Gardiennage</a></li><li><a href="#">Sûreté et Task Force</a></li><li><a href="#">Cynophile</a></li><li><a href="#">Sécurité incendie</a></li><li><a href="#">Intervention mobile</a></li><li><a href="#">Accueil et filtrage</a></li></ul>
+      </div>
+      <div>
+        <h4>Le groupe</h4>
+        <ul><li><a href="#">Espace acheteurs</a></li><li><a href="#">Références</a></li><li><a href="#">Implantations</a></li><li><a href="#">Conformité et labels</a></li><li><a href="#">Engagements RSE</a></li><li><a href="#">Recrutement</a></li><li><a href="#">Veille CNAPS</a></li></ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul><li><a class="mono" href="tel:+33605827182">06 05 82 71 82</a></li><li><a href="mailto:contact@diamond-protect.fr">contact@diamond-protect.fr</a></li><li>17 avenue des Louvresses<br>92230 Gennevilliers</li></ul>
+      </div>
+    </div>
+    <div class="footer__legal">
+      <p style="margin:0"><strong>Autorisation d'exercice CNAPS n° <span class="mono">AUT-095-2123-12-11-20240944324</span>.</strong> L'autorisation d'exercice ne confère aucune prérogative de puissance publique à l'entreprise ou aux personnes qui en bénéficient.</p>
+      <p style="margin:0">Diamond Protect, SAS au capital de 100 000 € · RCS Nanterre <span class="mono">929 218 212</span> · APE 8010Z · Mentions légales · Aucun cookie publicitaire.</p>
+    </div>
+  </div>
+</footer>
+
+<div class="mock-flag" aria-hidden="true">Maquette v1 · textes proposés · photos provisoires</div>
+
+<script>
+  // Lumière rasante du hero
+  const hero = document.querySelector('.hero');
+  const sheen = document.querySelector('.hero__sheen');
+  if (hero && matchMedia('(pointer:fine)').matches) {
+    hero.addEventListener('pointermove', e => {
+      const r = hero.getBoundingClientRect();
+      sheen.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
+      sheen.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
+    });
+  }
+
+  // Vitrine : le survol ou le focus allume la photo du métier
+  const items = document.querySelectorAll('[data-metiers] .metier');
+  const imgs = document.querySelectorAll('.niche img');
+  const label = document.querySelector('[data-niche-label]');
+  const light = li => {
+    items.forEach(i => i.classList.toggle('is-on', i === li));
+    imgs.forEach((im, k) => im.classList.toggle('is-on', k === +li.dataset.img));
+    label.textContent = li.querySelector('.metier__name').textContent;
+  };
+  items.forEach(li => {
+    li.addEventListener('pointerenter', () => light(li));
+    li.addEventListener('focusin', () => light(li));
+  });
+
+  // Références : le filtre laisse dans l'ombre les secteurs non choisis
+  const grid = document.querySelector('[data-clients]');
+  document.querySelectorAll('.clients__filters .chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const f = chip.dataset.filter;
+      document.querySelectorAll('.clients__filters .chip').forEach(c => {
+        const on = c === chip;
+        c.classList.toggle('is-on', on);
+        c.setAttribute('aria-pressed', on);
+      });
+      grid.querySelectorAll('li').forEach(li => li.classList.toggle('is-dim', f !== 'all' && li.dataset.sector !== f));
+    });
+  });
+
+  // Apparitions au défilement
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+  }), { rootMargin: '0px 0px -8% 0px' });
+  document.querySelectorAll('[data-reveal]').forEach(el => io.observe(el));
+
+  // Formulaire de maquette
+  document.getElementById('devis-rapide').addEventListener('submit', e => {
+    e.preventDefault();
+    const b = e.target.querySelector('button');
+    b.textContent = 'Demande enregistrée (maquette)';
+  });
+</script>
+</body>
+</html>
