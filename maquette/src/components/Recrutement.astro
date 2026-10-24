@@ -1,0 +1,28 @@
+---
+import Icon from './Icon.astro';
+import Diamant from './Diamant.astro';
+---
+<section class="recrut" id="recrutement" aria-labelledby="rec-titre">
+  <Diamant class="rec-diamant" />
+  <div class="container in">
+    <div>
+      <p class="label">Recrutement</p>
+      <h2 id="rec-titre">Agents de sécurité, SSIAP, maîtres-chiens : rejoignez nos équipes.</h2>
+    </div>
+    <div class="side">
+      <p>Plus de 220 collaborateurs, un encadrement présent sur le terrain et des formations suivies (SST, SSIAP, MAC APS). Carte professionnelle CNAPS requise.</p>
+      <a class="btn btn-dark" href="#contact">Voir les offres <Icon name="arrow" /></a>
+    </div>
+  </div>
+</section>
+<style>
+  .recrut { position: relative; overflow: hidden; background: var(--teal); color: var(--night); padding-block: clamp(56px, 7vw, 88px); }
+  :global(.rec-diamant) { position: absolute; width: 420px; right: -60px; top: -60px; color: var(--night) !important; opacity: .18; }
+  .in { position: relative; display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: clamp(24px, 5vw, 64px); align-items: end; }
+  .label { color: var(--night); }
+  h2 { font-size: clamp(2rem, 4vw, 3.2rem); margin-top: 14px; }
+  .side { display: grid; gap: 20px; font-size: 1.02rem; }
+  .btn-dark { background: var(--night); color: var(--text-dark); justify-self: start; }
+  .btn-dark:hover { background: #000; }
+  @media (max-width: 860px) { .in { grid-template-columns: 1fr; } }
+</style>

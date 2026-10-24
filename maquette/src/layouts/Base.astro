@@ -1,0 +1,44 @@
+---
+import '../styles/global.css';
+import { societe } from '../data/site';
+interface Props { title: string; description: string }
+const { title, description } = Astro.props;
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: societe.nom,
+  url: 'https://diamond-protect.fr/',
+  telephone: societe.telephoneSchema,
+  email: societe.email,
+  parentOrganization: { '@type': 'Organization', name: societe.groupe },
+  identifier: { '@type': 'PropertyValue', name: "Autorisation d'exercice CNAPS", value: societe.cnaps },
+};
+---
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#0a1a22" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&family=JetBrains+Mono:wght@400;500&display=swap" />
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  </head>
+  <body>
+    <slot />
+    <p class="maquette-flag" aria-hidden="true">Maquette v0.1 · textes et visuels à valider</p>
+    <style is:global>
+      .maquette-flag {
+        position: fixed; z-index: 50;
+        right: max(12px, env(safe-area-inset-right, 0px)); bottom: max(12px, env(safe-area-inset-bottom, 0px));
+        font: 500 0.66rem/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase;
+        color: var(--night); background: var(--amber); padding: 7px 10px; border-radius: 3px;
+        pointer-events: none;
+      }
+    </style>
+  </body>
+</html>

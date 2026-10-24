@@ -1,0 +1,62 @@
+---
+import Icon from './Icon.astro';
+import { expertises } from '../data/site';
+const [vedette, ...autres] = expertises;
+---
+<section class="section light" id="expertises" aria-labelledby="exp-titre">
+  <div class="container">
+    <div class="section-head">
+      <p class="label">Expertises</p>
+      <h2 id="exp-titre">Sept métiers, un seul interlocuteur.</h2>
+      <p class="muted">Nos chefs de dispositif combinent les métiers selon votre site, votre réglementation et votre niveau de risque.</p>
+    </div>
+    <div class="grid">
+      <article class="card big">
+        <figure class="photo" data-photo="provisoire">
+          <img src="img/controle-acces-stade.jpg" alt="Agents de sécurité au contrôle d'accès d'une enceinte" loading="lazy" />
+          <span class="photo-tag">Visuel provisoire</span>
+        </figure>
+        <div class="body">
+          <span class="tag">{vedette.tag}</span>
+          <h3>{vedette.titre}</h3>
+          <p class="muted">{vedette.texte}</p>
+          <a class="more" href="#contact">Découvrir <Icon name="arrow" /></a>
+        </div>
+      </article>
+      {autres.map((e) => (
+        <article class="card">
+          <span class="tag">{e.tag}</span>
+          <h3>{e.titre}</h3>
+          <p class="muted">{e.texte}</p>
+          <a class="more" href="#contact">Découvrir <Icon name="arrow" /></a>
+        </article>
+      ))}
+      <article class="card combo">
+        <h3>Un dispositif combiné ?</h3>
+        <p>Événement avec SSIAP et cynophile, site industriel avec rondes et intervention mobile : décrivez votre besoin, nous composons l'équipe.</p>
+        <a class="btn btn-primary" href="#contact">Décrire mon besoin <Icon name="arrow" /></a>
+      </article>
+    </div>
+  </div>
+</section>
+<style>
+  .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--steel-2); border: 1px solid var(--steel-2); }
+  .card { background: var(--white); padding: 28px; display: flex; flex-direction: column; gap: 12px; min-width: 0; position: relative; transition: background-color .2s; }
+  .card:hover { background: #f8fbfb; }
+  .card h3 { font-size: 1.5rem; }
+  .card .muted { font-size: .96rem; flex: 1; }
+  .tag { align-self: flex-start; font: 500 .68rem/1 var(--f-mono); letter-spacing: .09em; text-transform: uppercase; color: var(--teal-deep); border: 1px solid rgba(21, 112, 108, .35); padding: 6px 8px; border-radius: 3px; }
+  .more { display: inline-flex; gap: 8px; align-items: center; font-weight: 600; font-size: .92rem; color: var(--teal-deep); text-decoration: none; margin-top: 6px; }
+  .more :global(svg) { width: 16px; height: 16px; transition: transform .2s; }
+  .card:hover .more :global(svg) { transform: translateX(3px); }
+  .big { grid-column: span 2; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); padding: 0; gap: 0; }
+  .big .photo { min-height: 300px; }
+  .big .body { padding: 28px; display: flex; flex-direction: column; gap: 12px; }
+  .big h3 { font-size: 2rem; }
+  .combo { background: var(--night); color: var(--text-dark); }
+  .combo:hover { background: var(--night-2); }
+  .combo p { color: var(--muted-dark); font-size: .96rem; flex: 1; }
+  .combo .btn { align-self: flex-start; }
+  @media (max-width: 1000px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .big, .combo { grid-column: 1 / -1; } }
+  @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } .big { grid-template-columns: 1fr; } .big .photo { min-height: 220px; } }
+</style>

@@ -1,0 +1,81 @@
+---
+import Icon from './Icon.astro';
+import { societe, expertises } from '../data/site';
+---
+<section class="section" id="contact" aria-labelledby="ct-titre">
+  <div class="container in">
+    <div class="copy">
+      <p class="label">Contact</p>
+      <h2 id="ct-titre">Parlons de votre dispositif.</h2>
+      <p class="muted">Un responsable d'exploitation étudie votre besoin et revient vers vous avec une proposition chiffrée sous 24 h ouvrées.</p>
+      <dl class="coords">
+        <div><dt>Astreinte 24h/24</dt><dd><a href={`tel:${societe.telephoneSchema}`}>{societe.telephone}</a></dd></div>
+        <div><dt>E-mail</dt><dd><a href={`mailto:${societe.email}`}>{societe.email}</a></dd></div>
+        <div><dt>Siège</dt><dd>17 avenue des Louvresses<br />92230 Gennevilliers</dd></div>
+      </dl>
+    </div>
+    <form class="form viewfinder" id="devis" novalidate>
+      <fieldset class="mode">
+        <legend class="sr-only">Type de demande</legend>
+        <label><input type="radio" name="mode" value="devis" checked /> <span>Recevoir un devis</span></label>
+        <label><input type="radio" name="mode" value="rappel" /> <span>Être rappelé</span></label>
+      </fieldset>
+      <div class="row">
+        <label for="f-nom">Nom et prénom<input id="f-nom" name="nom" autocomplete="name" required /></label>
+        <label for="f-societe">Organisation<input id="f-societe" name="societe" autocomplete="organization" /></label>
+      </div>
+      <div class="row">
+        <label for="f-email">E-mail<input id="f-email" type="email" name="email" autocomplete="email" required /></label>
+        <label for="f-tel">Téléphone<input id="f-tel" type="tel" name="telephone" autocomplete="tel" required /></label>
+      </div>
+      <label for="f-presta">Prestation souhaitée
+        <select id="f-presta" name="prestation" required>
+          <option value="">Choisir…</option>
+          {expertises.map((e) => <option>{e.titre}</option>)}
+          <option>Dispositif combiné</option>
+          <option>Appel d'offres</option>
+        </select>
+      </label>
+      <label for="f-msg" class="msg">Votre besoin<textarea id="f-msg" name="message" rows="4" placeholder="Lieu, dates, type de site ou d'événement, effectifs estimés…"></textarea></label>
+      <div class="submit">
+        <button class="btn btn-primary" type="submit">Envoyer ma demande <Icon name="arrow" /></button>
+        <p class="status" role="status" aria-live="polite"></p>
+      </div>
+    </form>
+  </div>
+</section>
+<script is:inline>
+  (function () {
+    var f = document.getElementById('devis'); if (!f) return;
+    f.addEventListener('submit', function (e) {
+      e.preventDefault();
+      f.querySelector('.status').textContent = 'Maquette : l’envoi est désactivé. Le formulaire sera relié à la messagerie de Diamond Protect.';
+    });
+  })();
+</script>
+<style>
+  .in { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(32px, 6vw, 88px); align-items: start; }
+  .copy { display: grid; gap: 22px; }
+  .copy .muted { font-size: 1.1rem; }
+  .coords { margin: 8px 0 0; border-top: 1px solid var(--line-dark-2); }
+  .coords div { display: grid; grid-template-columns: 10em minmax(0, 1fr); gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--line-dark); }
+  .coords dt { font: 500 .72rem/1.7 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted-dark); }
+  .coords dd { margin: 0; font-weight: 600; overflow-wrap: anywhere; }
+  .coords a { text-decoration: none; color: var(--teal-bright); }
+  .form { background: var(--night-2); border: 1px solid var(--line-dark-2); padding: clamp(22px, 3vw, 36px); display: grid; gap: 16px; }
+  .mode { border: 0; padding: 0; margin: 0 0 4px; display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line-dark-2); border: 1px solid var(--line-dark-2); }
+  .mode label { position: relative; display: block; cursor: pointer; }
+  .mode input { position: absolute; opacity: 0; }
+  .mode span { display: block; text-align: center; padding: 12px; font-weight: 600; font-size: .92rem; background: var(--night-2); color: var(--muted-dark); }
+  .mode input:checked + span { background: var(--teal); color: var(--night); }
+  .mode input:focus-visible + span { outline: 2px solid var(--teal-bright); outline-offset: -2px; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form label:not(.mode label) { display: grid; gap: 7px; font: 500 .72rem/1.3 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted-dark); }
+  input, select, textarea { font: 400 1rem/1.4 var(--f-body); color: var(--text-dark); background: var(--night); border: 1px solid var(--line-dark-2); border-radius: var(--r); padding: 12px 13px; width: 100%; letter-spacing: 0; text-transform: none; }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--teal-bright); }
+  textarea { resize: vertical; }
+  .submit { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+  .status { font-size: .88rem; color: var(--amber); }
+  @media (max-width: 900px) { .in { grid-template-columns: 1fr; } }
+  @media (max-width: 520px) { .row { grid-template-columns: 1fr; } .coords div { grid-template-columns: 1fr; gap: 2px; } }
+</style>

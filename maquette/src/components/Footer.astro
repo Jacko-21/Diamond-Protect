@@ -1,0 +1,30 @@
+---
+import { societe, expertises, secteurs } from '../data/site';
+---
+<footer class="footer">
+  <div class="container">
+    <div class="top">
+      <div class="brand">
+        <img src="logo/logo-blanc.svg" alt="Diamond Protect" width="170" height="56" />
+        <p>Sécurité privée autorisée par le CNAPS. Filiale du {societe.groupe}.</p>
+      </div>
+      <nav aria-label="Expertises"><p class="h">Expertises</p>{expertises.map((e) => <a href="#expertises">{e.titre}</a>)}</nav>
+      <nav aria-label="Secteurs"><p class="h">Secteurs</p>{secteurs.slice(0, 6).map((s) => <a href="#secteurs">{s.nom}</a>)}</nav>
+      <nav aria-label="Entreprise"><p class="h">Entreprise</p><a href="#implantations">Le groupe</a><a href="#conformite">Conformité et labels</a><a href="#acheteurs">Espace acheteurs</a><a href="#recrutement">Recrutement</a><a href="#contact">Contact</a></nav>
+    </div>
+    <p class="legal">{societe.nom} · {societe.forme} · SIREN {societe.siren} · {societe.rcs} · APE {societe.ape} · Autorisation d'exercice CNAPS n° {societe.cnaps}. {societe.mentionL612_14} (art. L.612-14 du Code de la sécurité intérieure).</p>
+  </div>
+</footer>
+<style>
+  .footer { background: #061015; border-top: 1px solid var(--line-dark); padding-block: 64px 80px; font-size: .9rem; }
+  .top { display: grid; grid-template-columns: minmax(0, 1.3fr) repeat(3, minmax(0, 1fr)); gap: 32px; padding-bottom: 40px; border-bottom: 1px solid var(--line-dark); }
+  .brand { display: grid; gap: 16px; align-content: start; color: var(--muted-dark); max-width: 30ch; }
+  .brand img { width: 170px; height: auto; }
+  nav { display: grid; gap: 8px; align-content: start; }
+  .h { font: 500 .72rem/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--teal-bright); margin-bottom: 6px; }
+  nav a { color: var(--muted-dark); text-decoration: none; }
+  nav a:hover { color: var(--text-dark); }
+  .legal { padding-top: 24px; font-size: .78rem; color: #7b9097; max-width: 110ch; }
+  @media (max-width: 900px) { .top { grid-template-columns: 1fr 1fr; } .brand { grid-column: 1 / -1; } }
+  @media (max-width: 480px) { .top { grid-template-columns: 1fr; } }
+</style>

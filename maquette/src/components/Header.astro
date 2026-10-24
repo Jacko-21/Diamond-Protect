@@ -1,0 +1,70 @@
+---
+import Icon from './Icon.astro';
+import { societe } from '../data/site';
+const nav = [
+  ['Expertises', '#expertises'],
+  ['Secteurs', '#secteurs'],
+  ['Références', '#references'],
+  ['Espace acheteurs', '#acheteurs'],
+  ['Le groupe', '#implantations'],
+  ['Recrutement', '#recrutement'],
+];
+---
+<div class="topbar">
+  <div class="container topbar-in">
+    <span class="mono">Autorisation d'exercice CNAPS n° {societe.cnaps}</span>
+    <a class="mono hot" href={`tel:${societe.telephoneSchema}`}><Icon name="phone" /> Astreinte 24h/24 · {societe.telephone}</a>
+  </div>
+</div>
+<header class="site-header">
+  <div class="container bar">
+    <a class="brand" href="#top" aria-label="Diamond Protect, accueil">
+      <img src="logo/logo-blanc.svg" alt="Diamond Protect" width="150" height="50" />
+    </a>
+    <nav id="menu" class="nav" aria-label="Navigation principale">
+      {nav.map(([l, h]) => <a href={h}>{l}</a>)}
+    </nav>
+    <a class="btn btn-primary cta" href="#contact">Demander un devis</a>
+    <button class="burger" type="button" aria-controls="menu" aria-expanded="false" aria-label="Ouvrir le menu">
+      <span class="i-open"><Icon name="menu" /></span><span class="i-close"><Icon name="close" /></span>
+    </button>
+  </div>
+</header>
+<script is:inline>
+  (function () {
+    var b = document.querySelector('.burger'); var h = document.querySelector('.site-header');
+    if (!b) return;
+    b.addEventListener('click', function () {
+      var open = h.classList.toggle('open'); b.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    document.querySelectorAll('#menu a').forEach(function (a) { a.addEventListener('click', function () { h.classList.remove('open'); b.setAttribute('aria-expanded', 'false'); }); });
+  })();
+</script>
+<style>
+  .topbar { background: #071319; border-bottom: 1px solid var(--line-dark); font-size: .72rem; }
+  .topbar-in { display: flex; justify-content: space-between; align-items: center; gap: 16px; min-height: 36px; }
+  .mono { font-family: var(--f-mono); letter-spacing: .04em; color: var(--muted-dark); text-decoration: none; }
+  .hot { color: var(--teal-bright); display: inline-flex; gap: 8px; align-items: center; white-space: nowrap; }
+  .hot :global(svg) { width: 14px; height: 14px; }
+  @media (max-width: 760px) { .topbar-in > span { display: none; } .topbar-in { justify-content: flex-end; } }
+
+  .site-header { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 40; background: rgba(10, 26, 34, .9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line-dark); }
+  .bar { display: flex; align-items: center; gap: 28px; min-height: 76px; }
+  .brand img { width: 150px; height: auto; }
+  .nav { display: flex; gap: 4px; margin-left: auto; }
+  .nav a { font-size: .93rem; font-weight: 500; text-decoration: none; color: var(--muted-dark); padding: 8px 11px; border-radius: var(--r); }
+  .nav a:hover { color: var(--text-dark); background: var(--night-3); }
+  .cta { padding: 13px 18px; }
+  .burger { display: none; margin-left: auto; background: none; border: 1px solid var(--line-dark-2); color: var(--text-dark); border-radius: var(--r); padding: 9px; cursor: pointer; }
+  .burger :global(svg) { width: 22px; height: 22px; }
+  .i-close { display: none; }
+  @media (max-width: 1080px) {
+    .burger { display: block; }
+    .cta { display: none; }
+    .nav { display: none; position: absolute; left: 0; right: 0; top: 100%; flex-direction: column; gap: 0; background: var(--night); border-bottom: 1px solid var(--line-dark); padding: 8px max(var(--gutter), env(safe-area-inset-left, 0px)) 20px; }
+    .nav a { padding: 14px 0; border-bottom: 1px solid var(--line-dark); border-radius: 0; font-size: 1.05rem; }
+    .site-header.open .nav { display: flex; }
+    .site-header.open .i-open { display: none; }
+    .site-header.open .i-close { display: block; }
+  }
+</style>

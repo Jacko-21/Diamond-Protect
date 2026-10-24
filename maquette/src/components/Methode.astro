@@ -1,0 +1,32 @@
+---
+import { methode } from '../data/site';
+---
+<section class="section light" id="methode" aria-labelledby="met-titre">
+  <div class="container">
+    <div class="section-head">
+      <p class="label">Méthode</p>
+      <h2 id="met-titre">Un dispositif piloté, du devis au reporting.</h2>
+      <p class="muted">Chaque mission est encadrée et tracée : exploitation, contrôle, qualité et formation travaillent ensemble, sans angle mort.</p>
+    </div>
+    <ol class="steps">
+      {methode.map((m, i) => (
+        <li>
+          <span class="step num">Étape {i + 1}</span>
+          <h3>{m.titre}</h3>
+          <p class="muted">{m.texte}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+<style>
+  .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; counter-reset: s; }
+  .steps li { position: relative; display: grid; gap: 12px; align-content: start; padding-top: 30px; border-top: 2px solid var(--steel-2); }
+  .steps li::before { content: ''; position: absolute; top: -7px; left: 0; width: 12px; height: 12px; background: var(--teal-deep); transform: rotate(45deg); }
+  .steps li:first-child { border-top-color: var(--teal-deep); }
+  .step { font: 500 .72rem/1 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--teal-deep); }
+  .steps h3 { font-size: 1.6rem; }
+  .steps p { font-size: .96rem; }
+  @media (max-width: 900px) { .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 40px; } }
+  @media (max-width: 520px) { .steps { grid-template-columns: 1fr; } }
+</style>

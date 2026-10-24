@@ -1,0 +1,53 @@
+---
+import Confirm from './Confirm.astro';
+---
+<section class="section light cas" aria-labelledby="cas-titre">
+  <div class="container">
+    <div class="head">
+      <div class="section-head">
+        <p class="label">Étude de cas</p>
+        <h2 id="cas-titre">Ce que nous avons sécurisé.</h2>
+        <p class="muted">Emplacement réservé : les études de cas seront publiées avec l'accord écrit de chaque client. Voici le format proposé.</p>
+      </div>
+      <Confirm texte="Contenu à fournir par Diamond Protect" />
+    </div>
+    <div class="layout">
+      <blockquote class="quote">
+        <p>« Citation du client sur la qualité du dispositif, la réactivité ou le reporting. »</p>
+        <footer><strong>Nom, fonction</strong><span>Organisation cliente</span></footer>
+      </blockquote>
+      <div class="facts">
+        <dl>
+          <div><dt>Contexte</dt><dd>Type de site ou d'événement, enjeu, jauge</dd></div>
+          <div><dt>Dispositif</dt><dd>Métiers mobilisés, effectifs, durée</dd></div>
+          <div><dt>Encadrement</dt><dd>Chef de dispositif, PC sécurité, reporting</dd></div>
+        </dl>
+        <div class="metrics">
+          <p><span class="num">00</span>agents mobilisés</p>
+          <p><span class="num">00</span>jours d'exploitation</p>
+          <p><span class="num">00 %</span>indicateur qualité</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<style>
+  .cas { padding-top: 0; }
+  .head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px; margin-bottom: clamp(32px, 4vw, 48px); }
+  .head .section-head { margin-bottom: 0; }
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 1px; border: 1px dashed #9fb0b5; background: #c9d4d7; }
+  .quote { margin: 0; background: var(--night); color: var(--text-dark); padding: clamp(28px, 4vw, 48px); display: flex; flex-direction: column; justify-content: space-between; gap: 32px; }
+  .quote p { font-family: var(--f-display); font-variation-settings: 'wdth' 85; font-size: clamp(1.4rem, 2.4vw, 2rem); line-height: 1.2; font-weight: 500; color: var(--muted-dark); }
+  .quote footer { display: grid; gap: 2px; font-size: .9rem; color: var(--muted-dark); }
+  .quote strong { color: var(--text-dark); }
+  .facts { background: var(--white); padding: clamp(24px, 3vw, 40px); display: grid; gap: 28px; }
+  dl { margin: 0; display: grid; gap: 14px; }
+  dl div { display: grid; grid-template-columns: 9em minmax(0, 1fr); gap: 12px; padding-bottom: 14px; border-bottom: 1px dashed #c9d4d7; }
+  dt { font: 500 .72rem/1.6 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--teal-deep); }
+  dd { margin: 0; color: var(--muted-light); }
+  .metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .metrics p { display: grid; gap: 4px; font-size: .86rem; color: var(--muted-light); }
+  .metrics span { font-family: var(--f-display); font-variation-settings: 'wdth' 72; font-weight: 700; font-size: 2.6rem; line-height: 1; color: #a9b8bc; }
+  @media (max-width: 860px) { .layout { grid-template-columns: 1fr; } }
+  @media (max-width: 480px) { dl div { grid-template-columns: 1fr; gap: 4px; } .metrics { grid-template-columns: 1fr; } }
+</style>
